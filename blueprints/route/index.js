@@ -1,25 +1,27 @@
-// module.exports = {
-  // locals: function(options) {
-    // // Return custom template variables here.
-    // return {};
-  // },
+module.exports = {
+  description () {
+    return 'generates a route'
+  },
 
-  // fileMapTokens: function(options) (
-    // // Return custom tokens to be replaced in your files
-    // return {
-      // __token__: function(options){
-        // // logic to determine value goes here
-        // return 'value';
-      // }
-    // }
-  // },
+  locals (options) {
+    return {
+      realEntityName: options.entity.name,
+      smartPath: options.settings.getSetting('smartPath'),
+      dumbPath: options.settings.getSetting('dumbPath')
+    }
+  },
 
-  // Should probably never need to be overriden
-  //
-  // filesPath: function() {
-    // return path.join(this.path, 'files');
-  // },
-
-  // beforeInstall: function(options) {},
-  // afterInstall: function(options) {},
-// };
+  fileMapTokens () {
+    return {
+      __realname__ (options) {
+        return options.entity.name
+      },
+      __smart__ (options) {
+        return options.settings.getSetting('smartPath')
+      },
+      __dumb__ (options) {
+        return options.settings.getSetting('dumbPath')
+      }
+    }
+  }
+}

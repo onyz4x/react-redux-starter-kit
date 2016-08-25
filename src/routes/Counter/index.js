@@ -1,5 +1,5 @@
-import { injectReducer } from '../../store/reducers'
-import { injectSagas } from '../../store/sagas'
+import { injectReducer } from 'store/reducers'
+import { injectSagas } from 'store/sagas'
 
 export default (store) => ({
   path: 'counter',
