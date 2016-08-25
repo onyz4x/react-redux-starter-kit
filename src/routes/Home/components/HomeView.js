@@ -1,6 +1,7 @@
 import React from 'react'
 import DuckImage from '../assets/Duck.jpg'
 import classes from './HomeView.scss'
+import { DatePicker } from 'antd';
 
 export const HomeView = () => (
   <div>
@@ -9,6 +10,7 @@ export const HomeView = () => (
       alt='This is a duck, because Redux!'
       className={classes.duck}
       src={DuckImage} />
+    <DatePicker />
   </div>
 )
 
