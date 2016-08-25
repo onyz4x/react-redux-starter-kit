@@ -2,7 +2,6 @@
 import CoreLayout from '../layouts/CoreLayout/CoreLayout'
 import Home from './Home'
 import CounterRoute from './Counter'
-import { injectSagas } from '../../store/sagas'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
