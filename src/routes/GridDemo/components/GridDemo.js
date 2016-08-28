@@ -3,7 +3,7 @@ import { DatePicker ,Menu,Breadcrumb} from 'antd';
 import { IndexLink, Link } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
-export const GridDemo = (props) => (
+const GridDemo = (props) => (
   <div> 
 
      <AppBar

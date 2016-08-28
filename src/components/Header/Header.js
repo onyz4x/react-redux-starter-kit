@@ -15,6 +15,9 @@ export const Header = () => (
       <Menu.Item key="3"> <Link to='/GridDemo' activeClassName={classes.activeRoute}>
         GridDemo
       </Link></Menu.Item>
+       <Menu.Item key="4"> <Link to='/FormDemo' activeClassName={classes.activeRoute}>
+        FormDemo
+      </Link></Menu.Item>
     </Menu>
   </div>
 )
