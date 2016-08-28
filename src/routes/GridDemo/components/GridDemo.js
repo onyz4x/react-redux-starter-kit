@@ -10,6 +10,8 @@ export const GridDemo = (props) => (
     title="Title"
     iconClassNameRight="muidocs-icon-navigation-expand-more"
   />
+
+  <button type="button" className="btn btn-primary">（首选项）Primary</button>
   </div>
 )
 

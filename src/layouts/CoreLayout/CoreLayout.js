@@ -4,7 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import classes from './CoreLayout.scss'
 // import 'antd/dist/antd.css'
- import '../../styles/core.scss'
+// import '../../styles/core.scss'
 
 export const CoreLayout = ({ children }) => (
   <MuiThemeProvider>
