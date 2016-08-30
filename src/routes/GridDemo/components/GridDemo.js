@@ -24,21 +24,21 @@ const GridDemo = (props) => (
   <div>
     <Paper style={menuStyle}>
       <Menu>
-        <MenuItem>
-          <Link to='/GridDemo/Griddemo1' activeClassName={classes.activeRoute}>
+        <Link to='/GridDemo/Griddemo1' activeClassName={classes.activeRoute}>
+          <MenuItem>
             demo1
-          </Link>
-        </MenuItem>
-        <MenuItem>
-          <Link to='/GridDemo/Griddemo2' activeClassName={classes.activeRoute}>
+          </MenuItem>
+        </Link>
+        <Link to='/GridDemo/Griddemo2' activeClassName={classes.activeRoute}>
+          <MenuItem>
             demo2
-          </Link>
-        </MenuItem>
-        <MenuItem>
-          <Link to='/GridDemo/Griddemo3' activeClassName={classes.activeRoute}>
+          </MenuItem>
+        </Link>
+        <Link to='/GridDemo/Griddemo3' activeClassName={classes.activeRoute}>
+          <MenuItem>
             demo3
-          </Link>
-        </MenuItem>
+          </MenuItem>
+        </Link>
       </Menu>
     </Paper>
     <div style={contentStyle}>
