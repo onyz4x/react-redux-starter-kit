@@ -1,4 +1,4 @@
-import { take, put, select } from 'redux-saga/effects'
+import {take, put, select} from 'redux-saga/effects'
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -18,18 +18,16 @@ const ACTION_HANDLERS = {}
 // Reducer
 // ------------------------------------
 const initialState = {}
-export default function counterReducer (state = initialState, action) {
+export default function counterReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
 
-  return handler ? handler(state, action) : state
+  return handler
+    ? handler(state, action)
+    : state
 }
-
 
 // ------------------------------------
 // Sagas
 // ------------------------------------
 
-
-export const sagas = [
-
-]
+export const sagas = []
