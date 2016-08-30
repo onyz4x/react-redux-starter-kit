@@ -1,6 +1,6 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form';
-import  NormalTextField from 'components/Form/NormalTextField'
+import { Field, reduxForm, change} from 'redux-form';
+import NormalTextField from 'components/Form/NormalTextField'
 
 const showResults = values =>
   new Promise(resolve => {
@@ -27,10 +27,19 @@ const renderTestField = (props) => {
   )
 
 }
+const renderSelectField = ({ loadCities, children, input, label, meta: { touched, error, dispatch }, ...custom }) => {
+
+  return (
+    <select className="form-control input-lg" {...input} onChange={(e) => { input.onChange(e);loadCities(); } }
+      {...custom}>
+      {children}
+    </select>
+  )
+}
 
 export const FormDemo = (props) => {
   console.log(props)
-  const { handleSubmit, pristine, reset, submitting } = props
+  const { handleSubmit, pristine, reset, submitting, cities, loadCities, dispatch } = props
   return (
     <form >
       <div>
@@ -41,12 +50,34 @@ export const FormDemo = (props) => {
       <div>
         <label>Last Name</label>
         <div>
-          <Field name="lastName" component={renderTestField} type="text" placeholder="Last Name"/>
+          <Field name="lastName"  component={renderTestField} type="text" loadCities={loadCities} placeholder="Last Name"/>
         </div>
       </div>
       <div>
+        <label>Country</label>
+        <div>
+          <Field name="country"  disabled={!props.countries.length} component={renderSelectField} loadCities={loadCities}  >
+            <option value=""></option>
+            {props.countries && props.countries.map(c => (<option  key={c.id}  value={c.id}>{c.name}</option>)) }
+          </Field>
+        </div>
+      </div>
+      <div>
+        <label>Cities </label>
+        <div>
+          <Field name="city"  className="form-control  input-sm" component='select'  >
+
+            {props.cities && props.cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>)) }
+          </Field>
+        </div>
+      </div>
+
+
+      <div>
         <button type="submit" disabled={pristine || submitting} onClick={handleSubmit(showResults) }>Submit</button>
         <button type="button" disabled={pristine || submitting} onClick={reset}>Clear Values</button>
+
+        <button type="button" onClick={loadCities}>Load CIties</button>
       </div>
     </form>
   )
