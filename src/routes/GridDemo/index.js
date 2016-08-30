@@ -6,10 +6,9 @@ import GridDemo3Route from '../Griddemo3'
 
 export default(store) => ({
   path: 'GridDemo',
+  indexRoute: GridDemo1Route(store),
   childRoutes: [
-    GridDemo1Route(store),
-    GridDemo2Route(store),
-    GridDemo3Route(store)
+    GridDemo1Route(store), GridDemo2Route(store), GridDemo3Route(store)
   ],
   /*  Async getComponent is only invoked when route matches   */
   getComponent(nextState, cb) {
