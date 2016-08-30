@@ -1,6 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form';
-import TextField from 'material-ui/TextField'
+import  NormalTextField from 'components/Form/NormalTextField'
+
 const showResults = values =>
   new Promise(resolve => {
     setTimeout(() => {  // simulate server latency
@@ -9,15 +10,7 @@ const showResults = values =>
     }, 500)
   })
 
-const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
-  <TextField
-    hintText={label}
-    floatingLabelText={label}
-    errorText={touched && error}
-    {...input}
-    {...custom}
-    />
-)
+
 const validate = values => {
   const errors = {}
   if (!values.firstName) {
@@ -42,7 +35,7 @@ export const FormDemo = (props) => {
     <form >
       <div>
 
-        <Field name="firstName" label="名字" component={renderTextField} />
+        <Field name="firstName" label="名字" component={NormalTextField} />
 
       </div>
       <div>
