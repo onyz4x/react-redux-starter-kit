@@ -3,8 +3,8 @@ import DuckImage from '../assets/Duck.jpg'
 import classes from './HomeView.scss'
 import { DatePicker } from 'antd';
 import { translate } from 'react-i18next';
-import i18n from 'i18next';
-export const HomeView = ({t}) => (
+
+export const HomeView = ({t,changeLanguage}) => (
   <div>
     <h4>Welcome!</h4>
     {t("appName")}
@@ -14,8 +14,8 @@ export const HomeView = ({t}) => (
       src={DuckImage} />
     <DatePicker />
 
-    <input type="button" onClick={()=>{i18n.changeLanguage('en', (err, t) => {});}} value="ToEn"></input>
-    <input type="button" onClick={()=>{i18n.changeLanguage('zh', (err, t) => {});}} value="ToZh"></input>
+    <input type="button" onClick={()=>changeLanguage('en')} value="ToEn"></input>
+    <input type="button" onClick={()=>changeLanguage('zh')} value="ToZh"></input>
   </div>
 )
 

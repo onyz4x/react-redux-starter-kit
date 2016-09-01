@@ -2,7 +2,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
 import makeRootReducer from './reducers'
-
+import { injectSagas } from 'store/sagas'
 export default (initialState = {}, history) => {
   // ======================================================
   // Middleware Configuration
@@ -37,6 +37,9 @@ export default (initialState = {}, history) => {
   store.runSaga = (saga) => {
     sagaMiddleware.run(saga)
   }
+   const sagas = require('redux/Global').sagas;
+injectSagas(store, { key: 'global', sagas })
+
   if (module.hot) {
     module.hot.accept('./reducers', () => {
       const reducers = require('./reducers').default
