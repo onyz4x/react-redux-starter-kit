@@ -7,6 +7,9 @@ import createStore from './store/createStore'
 import AppContainer from './containers/AppContainer'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { I18nextProvider } from 'react-i18next';
+ // as we build ourself via webpack
+import i18n from './i18n';
 
 // ========================================================
 // Browser History Setup
@@ -36,6 +39,13 @@ if (__DEBUG__) {
     window.devToolsExtension.open()
   }
 }
+var resBundle = require(
+  "i18next-resource-store-loader!./locales/index.js"
+);
+
+i18n.init({
+  resources: resBundle
+});
 
 // ========================================================
 // Render Setup
@@ -43,14 +53,16 @@ if (__DEBUG__) {
 const MOUNT_NODE = document.getElementById('root')
 
 let render = () => {
+
+
   const routes = require('./routes/index').default(store)
 
   ReactDOM.render(
-    <AppContainer
+    <I18nextProvider i18n={ i18n }><AppContainer
       store={store}
       history={history}
       routes={routes}
-    />,
+    /></I18nextProvider>,
     MOUNT_NODE
   )
 }
