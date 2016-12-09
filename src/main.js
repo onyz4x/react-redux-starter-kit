@@ -6,7 +6,7 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import createStore from './store/createStore'
 import AppContainer from './containers/AppContainer'
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
+
 import { I18nextProvider } from 'react-i18next';
  // as we build ourself via webpack
 import i18n from './i18n';
@@ -96,7 +96,7 @@ if (__DEV__) {
     })
   }
 }
-injectTapEventPlugin()
+
 // ========================================================
 // Go!
 // ========================================================
