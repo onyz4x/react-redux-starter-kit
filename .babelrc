@@ -1,3 +1,4 @@
+
 // NOTE: These options are overriden by the babel-loader configuration
 // for webpack, which can be found in ~/build/webpack.config.
 //
@@ -5,6 +6,5 @@
 // module.hot is disabled), so keeping it and related plugins contained
 // within webpack helps prevent unexpected errors.
 {
-  "presets": ["es2015", "react", "stage-0"],
-  "plugins": ["transform-runtime",["antd", {style: "css",libraryName: "antd"}]]
+  "presets": ["es2015", "react", "stage-0"]
 }

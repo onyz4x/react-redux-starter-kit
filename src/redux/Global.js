@@ -22,12 +22,14 @@ export const actions = { changeLanguage }
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
+    [CHANGE_LANGUAGE]:(state)=>state,
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = {
+    aa:'11'
 }
 export default function globalReducer(state = initialState, action) {
     const handler = ACTION_HANDLERS[action.type]

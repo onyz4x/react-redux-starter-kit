@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { routerReducer as router } from 'react-router-redux'
 import { reducer as formReducer } from 'redux-form'
-import {globalReducer} from 'redux/Global'
+import globalReducer from 'redux/Global'
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, reduxForm, change} from 'redux-form';
-import NormalTextField from 'components/Form/NormalTextField'
+
 
 const showResults = values =>
   new Promise(resolve => {
@@ -44,7 +44,7 @@ export const FormDemo = (props) => {
     <form >
       <div>
 
-        <Field name="firstName" label="名字" component={NormalTextField} />
+
 
       </div>
       <div>
