@@ -2,7 +2,7 @@ import {take, put, select, call} from 'redux-saga/effects'
 import Immutable from 'immutable'
 import request from 'utils/request'
 import {startSubmit,stopSubmit} from 'redux-form'
-import {message, notification} from 'antd';
+import {message, notification} from 'fe-common';
 import config from 'utils/config'
 
 
@@ -23,8 +23,8 @@ export const <%= pascalEntityName %>_FETCH_FAILURE = '<%= pascalEntityName %>_FE
 export function fetch<%= pascalEntityName %>() {
   return {
   type: <%= pascalEntityName %>_FETCH_REQUESTED
-  }
-  }
+}
+}
 
 export const actions = {
   fetch<%= pascalEntityName %>,
@@ -66,11 +66,11 @@ export function *watchFetch<%= pascalEntityName %>() {
 
   yield put({type: '<%= pascalEntityName %>_FETCH_SUCCESSED'})
   // else {
-    //
-    //   yield put({type: '<%= pascalEntityName %>_FETCH_FAILURE', error: err.toString()})
-    // }
-  }
-  }
+  //
+  //   yield put({type: '<%= pascalEntityName %>_FETCH_FAILURE', error: err.toString()})
+  // }
+}
+}
 
 
 export const sagas = [

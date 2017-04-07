@@ -2,7 +2,7 @@ import { injectReducer } from 'store/reducers'
 import { injectSagas } from 'store/sagas'
 
 export default (store) => ({
-  path: '<%= realEntityName %>',
+  path: 'hr/<%= realEntityName %>',
   breadcrumbName:'<%= pascalEntityName %>',
   /*  Async getComponent is only invoked when route matches   */
   getComponent (nextState, cb) {

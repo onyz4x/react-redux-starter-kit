@@ -1,9 +1,19 @@
-import React from 'react'
+import React,{Component} from 'react'
 
-export const <%= pascalEntityName %> = (props) => (
-  <div>
-  </div>
-)
+export class  <%= pascalEntityName %> extends Component
+{
+  componentDidMount()
+  {
+
+  }
+  render()
+  {
+    return(
+      <div >
+      </div>
+    )
+  }
+}
 
 <%= pascalEntityName %>.propTypes = {
 }

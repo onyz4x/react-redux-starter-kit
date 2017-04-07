@@ -1,5 +1,8 @@
 import 'whatwg-fetch';
-
+import {push} from 'react-router-redux'
+import store from 'store/createStore'
+import cookie from 'react-cookie'
+import config from 'utils/config'
 /**
  * Parses the JSON returned by a network request
  *
@@ -22,6 +25,17 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
+  if (response.status == 403) {
+    if (window.store.getState().router.locationBeforeTransitions.pathname != 'login') {
+      window.location = '/login?returnUrl=' + encodeURIComponent(window.location.href);
+    }
+  }
+
+  if (response.status == 401) {
+    if (window.store.getState().router.locationBeforeTransitions.pathname != 'login') {
+      window.location = '/login?returnUrl=' + encodeURIComponent(window.location.href);
+    }
+  }
 
   const error = new Error(response.statusText);
   error.response = response;
@@ -36,10 +50,27 @@ function checkStatus(response) {
  *
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(url, options) {
-  return fetch(url, options)
+export default function request(url, options, onSuccess, onError, ignoreToken = false) {
+  let tokenChicago = window.store.getState().global.get('tokenChicago');
+  let opt = {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'locale': (cookie.load('i18next') || 'en'),
+      'Chicago-Auth-Token': ignoreToken ? '' : tokenChicago,
+    },
+  };
+  Object.assign(opt, options);
+
+  return fetch(url, opt)
     .then(checkStatus)
     .then(parseJSON)
-    .then((data) => ({ data }))
-    .catch((err) => ({ err }));
+    .then((data) => {
+      if (onSuccess) onSuccess(data);
+      return {data: data}
+    })
+    .catch((err) => {
+      if (onError) onError(err);
+      return {err: err}
+    });
 }
