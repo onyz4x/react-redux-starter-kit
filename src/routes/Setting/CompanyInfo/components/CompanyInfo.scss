@@ -1,0 +1,17 @@
+.tableOperations {
+  margin-bottom: 2px;
+}
+
+.tableOperations > button {
+  margin-right: 8px;
+}
+
+.mainContent{
+  :global
+  {
+    .ant-card-body
+    {
+      padding:16px;
+    }
+  }
+}

@@ -1,10 +1,11 @@
 // We only need to import the modules necessary for initial render
 import CoreLayout from '../layouts/CoreLayout/CoreLayout'
+import IframeLayout from '../layouts/IframeLayout/IframeLayout'
 import Home from './Home'
 import CounterRoute from './Counter'
 import FormDemoRoute from './FormDemo'
 import Test1Route from './Test1'
-
+import CompanyInfo from './Setting/CompanyInfo'
 
 import Test2Route from './Test2'
 
@@ -14,13 +15,14 @@ import Test2Route from './Test2'
 
 export const createRoutes = (store) => ({
   path: '/',
-  component: CoreLayout,
+  component: IframeLayout,
   indexRoute: Home,
   childRoutes: [
     CounterRoute(store),
     FormDemoRoute(store),
     Test1Route(store),
-    Test2Route(store)
+    Test2Route(store),
+    CompanyInfo(store)
   ]
 })
 
