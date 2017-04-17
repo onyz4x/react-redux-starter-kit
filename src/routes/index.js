@@ -4,6 +4,11 @@ import Home from './Home'
 import CounterRoute from './Counter'
 import FormDemoRoute from './FormDemo'
 import Test1Route from './Test1'
+
+
+import Test2Route from './Test2'
+
+
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
@@ -14,7 +19,8 @@ export const createRoutes = (store) => ({
   childRoutes: [
     CounterRoute(store),
     FormDemoRoute(store),
-    Test1Route(store)
+    Test1Route(store),
+    Test2Route(store)
   ]
 })
 

@@ -29,17 +29,24 @@ export const CoreLayout = ({children}) => (
         >
           <SubMenu key="sub1" title={<span><Icon type="user"/>财务管理</span>}>
             <SubMenu key="sub11" title={<span>业务处理</span>}>
-              <Menu.Item key="11">填制凭证</Menu.Item>
+              <Menu.Item key="11">
+                <Link to='/'>
+                  填制凭证
+                </Link></Menu.Item>
               <Menu.Item key="21">生成凭证</Menu.Item>
               <Menu.Item key="31">
                 <Link to='/test1'>
                   损益结转
                 </Link>
               </Menu.Item>
-              <Menu.Item key="41">option4</Menu.Item>
+              <Menu.Item key="41">  <Link to='/test2'>
+                科目余额表
+              </Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub12" title={<span>账表查询</span>}>
-              <Menu.Item key="12">科目余额表</Menu.Item>
+              <Menu.Item key="12">
+
+                </Menu.Item>
               <Menu.Item key="22">option2</Menu.Item>
               <Menu.Item key="32">option3</Menu.Item>
               <Menu.Item key="42">option4</Menu.Item>
@@ -53,13 +60,13 @@ export const CoreLayout = ({children}) => (
 
 
           </SubMenu>
-          <SubMenu key="sub2" title={<span><Icon type="laptop"/>subnav 2</span>}>
+          <SubMenu key="sub2" title={<span><Icon type="laptop"/>采购管理</span>}>
             <Menu.Item key="5">option5</Menu.Item>
             <Menu.Item key="6">option6</Menu.Item>
             <Menu.Item key="7">option7</Menu.Item>
             <Menu.Item key="8">option8</Menu.Item>
           </SubMenu>
-          <SubMenu key="sub3" title={<span><Icon type="notification"/>subnav 3</span>}>
+          <SubMenu key="sub3" title={<span><Icon type="notification"/>销售管理</span>}>
             <Menu.Item key="9">option9</Menu.Item>
             <Menu.Item key="10">option10</Menu.Item>
             <Menu.Item key="11">option11</Menu.Item>
