@@ -16,7 +16,6 @@ export const CoreLayout = ({children}) => (
       <div className="logo">
         <img src={logo5}></img>
       </div>
-
     </Header>
     <Layout>
       <Sider width={200} style={{background: '#fff'}}>

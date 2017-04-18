@@ -1,7 +1,7 @@
 import {take, put, select, call} from 'redux-saga/effects'
 import Immutable from 'immutable'
 import request from 'utils/request'
-import {startSubmit,stopSubmit} from 'redux-form'
+import {startSubmit, stopSubmit} from 'redux-form'
 import {message, notification} from 'antd';
 import config from 'utils/config'
 
@@ -13,6 +13,8 @@ export const CompanyInfo_FETCH_REQUESTED = 'CompanyInfo_FETCH_REQUESTED'
 export const CompanyInfo_FETCH_SUCCESSED = 'CompanyInfo_FETCH_SUCCESSED'
 export const CompanyInfo_FETCH_FAILURE = 'CompanyInfo_FETCH_FAILURE'
 
+export const LoginRequest = 'LoginRequest'
+
 
 // -------
 
@@ -22,12 +24,19 @@ export const CompanyInfo_FETCH_FAILURE = 'CompanyInfo_FETCH_FAILURE'
 
 export function fetchCompanyInfo() {
   return {
-  type: CompanyInfo_FETCH_REQUESTED
+    type: CompanyInfo_FETCH_REQUESTED
   }
+}
+
+export function login() {
+  return {
+    type: LoginRequest
   }
+}
 
 export const actions = {
   fetchCompanyInfo,
+  login
 }
 
 // ------------------------------------
@@ -47,7 +56,7 @@ const initialState = Immutable.Map({
   isFetching: false,
   list: Immutable.fromJS([{key: '001'},]),
 })
-export default function companyInfoReducer (state = initialState, action) {
+export default function companyInfoReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
 
   return handler ? handler(state, action) : state
@@ -60,19 +69,47 @@ export default function companyInfoReducer (state = initialState, action) {
 export function *watchFetchCompanyInfo() {
   while (true) {
 
-  yield take(CompanyInfo_FETCH_REQUESTED)
-  // let {data, err} = yield call(asyncWait)
-  // if (!err)
+    yield take(CompanyInfo_FETCH_REQUESTED)
+    // let {data, err} = yield call(asyncWait)
+    // if (!err)
+    let {data, err} = yield call(request,
+      config.currentServer + `manager/authority/companyInfo/companyList?_search=false&nd=1492487511276&rows=20&page=1&sidx=&sord=asc`,
+      {
+        method: 'get',
 
-  yield put({type: 'CompanyInfo_FETCH_SUCCESSED'})
-  // else {
+      });//ignore token, avoid API 500 error);
+    // https://www.phoneerp.com/manager/authority/companyInfo/companyList?_search=false&nd=1492487511276&rows=20&page=1&sidx=&sord=asc
+    yield put({type: 'CompanyInfo_FETCH_SUCCESSED'})
+    // else {
     //
     //   yield put({type: 'CompanyInfo_FETCH_FAILURE', error: err.toString()})
     // }
   }
+}
+
+export function *watchLoginRequest() {
+  while (true) {
+
+    yield take(LoginRequest)
+    // let {data, err} = yield call(asyncWait)
+    // if (!err)
+    let {data, err} = yield call(request,
+      config.currentServer + `manager/emp/empLoginAjax.do`,
+      {
+        method: 'POST',
+        body: "login=10000g01cadmin&passwd=123456",
+      });//ignore token, avoid API 500 error);
+
+    yield put({type: 'CompanyInfo_FETCH_SUCCESSED'})
+    // else {
+    //
+    //   yield put({type: 'CompanyInfo_FETCH_FAILURE', error: err.toString()})
+    // }
   }
+}
 
 
 export const sagas = [
-watchFetchCompanyInfo,
+  watchFetchCompanyInfo,
+  watchLoginRequest
 ]

@@ -51,13 +51,11 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options, onSuccess, onError, ignoreToken = false) {
-  let tokenChicago = window.store.getState().global.get('tokenChicago');
+ // let tokenChicago = window.store.getState().global.get('tokenChicago');
   let opt = {
     credentials: 'include',
     headers: {
-      'Content-Type': 'application/json',
-      'locale': (cookie.load('i18next') || 'en'),
-      'Chicago-Auth-Token': ignoreToken ? '' : tokenChicago,
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
   };
   Object.assign(opt, options);

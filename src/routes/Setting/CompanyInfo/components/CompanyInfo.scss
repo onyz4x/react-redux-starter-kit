@@ -6,12 +6,10 @@
   margin-right: 8px;
 }
 
-.mainContent{
-  :global
-  {
-    .ant-card-body
-    {
-      padding:16px;
+.mainContent {
+  :global {
+    .ant-card-body {
+      padding: 16px;
     }
   }
 }
