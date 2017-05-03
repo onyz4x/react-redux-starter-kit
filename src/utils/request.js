@@ -54,7 +54,7 @@ export default function request(url, options, onSuccess, onError, ignoreToken = 
  // let tokenChicago = window.store.getState().global.get('tokenChicago');
   let opt = {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
   };
   Object.assign(opt, options);

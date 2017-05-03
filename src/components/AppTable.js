@@ -3,25 +3,88 @@
  */
 
 import React, {Component} from 'react'
+import request from 'utils/request'
 
 
-import {Table} from 'antd'
+import {Table, Button} from 'antd'
 
 export class AppTable extends Component {
 
 
+  constructor(props) {
+    super();
+
+    let getRowItem = (record) => {
+      let rowItems = []
+      if (props.metadata.rowItems != undefined) {
+
+        props.metadata.rowItems.forEach((item) => {
+          if (item.type == "button") {
+            rowItems.push(<a onClick={() => {
+              let currentDataSource = this.props.dataSource.find(d => d.key == item.behavior.dataSource);
+
+              if (currentDataSource && currentDataSource.type == "api") {
+
+                let body = {};
+                currentDataSource.params.forEach(p => {
+                  body[p.key] = record[p.value]
+                })
+                request("http://localhost:3005" + currentDataSource.url,
+                  {
+                    method: "POST",
+                    body: JSON.stringify(body)
+                  }
+                  , (data) => {
+                    this.loadData();
+
+                  })
+              }
+
+
+            }} href="#">{item.title}</a>)
+          }
+
+        })
+
+        return rowItems;
+      }
+    }
+
+
+    this.state = {
+      columns: props.metadata.columns.concat([{
+        title: '操作',
+        width: 60,
+        render: (p, record) => <div>{getRowItem(record)}</div>
+      }]),
+      dataSource: undefined
+    }
+
+
+  }
+
+  loadData() {
+    let currentDataSource = this.props.dataSource.find(d => d.key == this.props.metadata.dataSource);
+
+
+    if (currentDataSource && currentDataSource.type == "api")
+      request("http://localhost:3005" + currentDataSource.url,
+        {}, (data) => this.setState({dataSource: data})
+      )
+
+  }
+
+
   componentDidMount() {
+    this.loadData()
 
-
-
-    //   this.props
   }
 
 
   render() {
+
     return (
-      <div className={classes.content}>
-      </div>
+      <Table size="middle" dataSource={this.state.dataSource} columns={this.state.columns} bordered={true} rowKey={this.props.metadata.rowkey}></Table>
     )
   }
 }
