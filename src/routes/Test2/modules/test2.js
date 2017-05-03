@@ -10,7 +10,7 @@ import config from 'utils/config'
 //-----------------------------
 // Constants
 // ------------------------------------
-export const Test2_FETCH_REQUESTED = 'Test2_FETCH_REQUESTED'
+export const Test2_FETCH_REQUESTED = '/Test2/Test2_FETCH_REQUESTED'
 export const Test2_FETCH_SUCCESSED = 'Test2_FETCH_SUCCESSED'
 export const Test2_FETCH_FAILURE = 'Test2_FETCH_FAILURE'
 

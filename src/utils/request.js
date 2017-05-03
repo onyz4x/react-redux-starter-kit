@@ -53,7 +53,6 @@ function checkStatus(response) {
 export default function request(url, options, onSuccess, onError, ignoreToken = false) {
  // let tokenChicago = window.store.getState().global.get('tokenChicago');
   let opt = {
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },

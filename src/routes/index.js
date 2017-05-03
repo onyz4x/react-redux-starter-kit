@@ -6,6 +6,7 @@ import CounterRoute from './Counter'
 import FormDemoRoute from './FormDemo'
 import Test1Route from './Test1'
 import CompanyInfo from './Setting/CompanyInfo'
+import PageRoute from './Page'
 
 import Test2Route from './Test2'
 
@@ -20,8 +21,7 @@ export const createRoutes = (store) => ({
   childRoutes: [
     CounterRoute(store),
     FormDemoRoute(store),
-    Test1Route(store),
-    Test2Route(store),
+    PageRoute(store),
     CompanyInfo(store)
   ]
 })
