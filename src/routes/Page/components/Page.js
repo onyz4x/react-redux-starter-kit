@@ -50,7 +50,7 @@ export class Page extends Component {
 
 
   renderModalPage() {
-    let modals = this.state.metadata.pages.filter(p => p.template == "modal" && !!p.default == false);
+    let modals = this.state.metadata.pages.filter(p => p.display == "modal" && !!p.default == false);
     let results = []
     modals.forEach(m => {
       results.push(<ModalContainer current={m} metadata={this.state.metadata}></ModalContainer>)
@@ -61,6 +61,10 @@ export class Page extends Component {
   render() {
     if (!this.state.metadata.pages) return <div>loading</div>;
     let defaultPage = this.state.metadata.pages.find(p => p.default);
+
+    if (this.props.metadata == undefined && defaultPage.type == "form") {
+      return <FormContainer id={defaultPage.id} current={defaultPage} metadata={this.state.metadata}/>
+    }
     return (
       <div>
         {defaultPage.layout.rows.map((r, i) => <Row type={r.type} justify={r.justify} key={i}>
