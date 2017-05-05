@@ -8,6 +8,7 @@ import {reduxForm, Field} from 'redux-form';
 import FormContainer from './FormContainer'
 import ModalContainer from './ModalContainer'
 import TestForm from './TestForm'
+import update from 'react-addons-update';
 
 export class Page extends Component {
 
@@ -20,15 +21,12 @@ export class Page extends Component {
       }
     }
     else {
-      let metadata = JSON.parse(JSON.stringify(props.metadata));
+      let metadata = update(props.metadata, {})
       let page = metadata.pages.find(p => p.id == props.id);
       page.default = true;
       metadata.pages = [page];
-
-      console.log(metadata);
       this.state = {
         metadata: metadata
-
       }
     }
   }
@@ -49,11 +47,11 @@ export class Page extends Component {
   }
 
 
-  renderModalPage() {
+  renderModalPage(id) {
     let modals = this.state.metadata.pages.filter(p => p.display == "modal" && !!p.default == false);
     let results = []
     modals.forEach(m => {
-      results.push(<ModalContainer current={m} metadata={this.state.metadata}></ModalContainer>)
+      results.push(<ModalContainer parentId={id} key={m.id} current={m} metadata={this.state.metadata}></ModalContainer>)
     })
     return results;
   }
@@ -68,23 +66,23 @@ export class Page extends Component {
     return (
       <div>
         {defaultPage.layout.rows.map((r, i) => <Row type={r.type} justify={r.justify} key={i}>
-          {r.cols.map((cs, j) => <Col style={cs.style} span={cs.span} key={j}>
+          {r.cols.map((cs, j) => <Col style={cs.style} span={cs.span} key={`${i}.${j}`}>
             {
-              cs.components.map(c => {
+              cs.components.map((c, k) => {
                 return (() => {
                   switch (c.type) {
                     case "table":
-                      return <div><AppTable
-                        dataSource={defaultPage.dataSource}
-                        metadata={c}></AppTable></div>;
+                      return <AppTable key={k} id={defaultPage.id}
+                                       dataSource={defaultPage.dataSource}
+                                       metadata={c}></AppTable>;
                     case "button":
-                      return <AppButton setState={(state) => this.setState(state)} onClick={(m) => {
+                      return <AppButton key={k} id={defaultPage.id} setState={(state) => this.setState(state)} onClick={(m) => {
                       } }
                                         metadata={c}></AppButton>;
                     case "textField":
-                      return <Field name={c.name} label={c.label} component={TextField}/>;
+                      return <Field key={k} id={defaultPage.id} name={c.name} label={c.label} component={TextField}/>;
                     default:
-                      return <span></span>;
+                      return <span key={k}></span>;
                   }
                 })()
               })
@@ -94,7 +92,7 @@ export class Page extends Component {
           </Col>)}
         </Row>)}
 
-        {this.renderModalPage()}
+        {this.renderModalPage(defaultPage.id)}
 
       </div>
     )

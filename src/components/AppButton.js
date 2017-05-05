@@ -28,6 +28,13 @@ export class AppButton extends Component {
         props.onClick(props.metadata)
       }
     }
+    else if (behavior && behavior.type == "save") {
+      this.handleClick = () => {
+        PubSub.publish(`${props.metadata.behavior.pageId}.save`, behavior);
+
+        props.onClick(props.metadata)
+      }
+    }
 
   }
 
@@ -40,7 +47,7 @@ export class AppButton extends Component {
   // }
 
   render() {
-    const {viewStyle, title}=this.props.metadata;
+    const {viewStyle, title} = this.props.metadata;
 
     return (
       <Button style={{margin: 5}} onClick={() =>

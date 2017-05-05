@@ -2,7 +2,7 @@
  * Created by lx on 2017/5/4.
  */
 import TestForm from './TestForm';
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import React, {Component} from 'react'
 
 
@@ -17,7 +17,7 @@ function mapStateToProps(state, props) {
 
   return {
     form: props.id,
-    currentForm:state.form
+    currentForm: state.form
 
   }
 }

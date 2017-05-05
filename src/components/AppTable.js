@@ -4,7 +4,7 @@
 
 import React, {Component} from 'react'
 import request from 'utils/request'
-
+import PubSub from 'pubsub-js'
 
 import {Table, Button} from 'antd'
 
@@ -14,13 +14,14 @@ export class AppTable extends Component {
   constructor(props) {
     super();
 
+
     let getRowItem = (record) => {
       let rowItems = []
       if (props.metadata.rowItems != undefined) {
 
-        props.metadata.rowItems.forEach((item) => {
+        props.metadata.rowItems.forEach((item, i) => {
           if (item.type == "button") {
-            rowItems.push(<a onClick={() => {
+            rowItems.push(<a key={i} onClick={() => {
               let currentDataSource = this.props.dataSource.find(d => d.key == item.behavior.dataSource);
 
               if (currentDataSource && currentDataSource.type == "api") {
@@ -53,11 +54,16 @@ export class AppTable extends Component {
     this.state = {
       columns: props.metadata.columns.concat([{
         title: '操作',
-        render: (p, record) => <div>{getRowItem(record)}</div>
+        render: (p, record, i) => <div key={i}>{getRowItem(record)}</div>
       }]),
       dataSource: undefined,
       isLoading: false
     }
+
+
+    PubSub.subscribe(`${props.id}.reload`, () => {
+      this.loadData();
+    })
   }
 
   loadData() {
@@ -75,14 +81,17 @@ export class AppTable extends Component {
 
   componentDidMount() {
     this.loadData()
+  }
 
+  componentWillUnmount() {
+    PubSub.unsubscribe(this.props.id);
   }
 
   render() {
 
     return (
       <Table size="middle" loading={this.state.isLoading} dataSource={this.state.dataSource}
-             columns={this.state.columns} bordered={true} rowKey={this.props.metadata.rowkey}></Table>
+             columns={this.state.columns} bordered={true} rowKey={this.props.metadata.rowKey}></Table>
     )
   }
 }
