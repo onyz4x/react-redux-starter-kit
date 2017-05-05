@@ -32,7 +32,7 @@ export class AppTable extends Component {
                 })
                 request("http://localhost:3005" + currentDataSource.url,
                   {
-                    method: "POST",
+                    method: currentDataSource.method,
                     body: JSON.stringify(body)
                   }
                   , (data) => {

@@ -8,6 +8,34 @@ import {reduxForm, Field} from 'redux-form';
 import Page from './Page'
 import {message, notification} from 'antd'
 import PubSub from 'pubsub-js'
+
+
+const validate = (values, props) => {
+  const errors = {}
+
+
+  let rules = props.current.rules;
+
+  rules.forEach((rule) => {
+
+    let value = values[rule.name]
+    if (rule.isRequired && (!value || value.trim() == '')) {
+      errors[rule.name] = rule.isRequired.errorMsg;
+    }
+
+    if (rule.maxLength && ( value && value.length > rule.maxLength.value)) {
+      errors[rule.name] = rule.maxLength.errorMsg;
+    }
+
+    if (rule.minLength && ( value && value.length < rule.minLength.value)) {
+      errors[rule.name] = rule.minLength.errorMsg;
+    }
+
+
+  })
+  return errors
+}
+
 export class TestForm extends Component {
 
   constructor(props) {
@@ -20,17 +48,13 @@ export class TestForm extends Component {
 
         request("http://localhost:3005" + dataSource.url,
           {
-            method: "POST",
+            method: dataSource.method,
             body: JSON.stringify(values)
           }
           , (data) => {
-
             PubSub.publish(`${props.id}.closeModal`, "");
-
             PubSub.publish(`${props.parentId}.reload`, "")
-
-            message.success("保存成功！" + props.parentId);
-
+            message.success("保存成功！");
           }, (err) => {
             notification.error(err.message)
 
@@ -60,6 +84,8 @@ export class TestForm extends Component {
 
 TestForm.propTypes = {}
 
-export default reduxForm({})(TestForm)
+export default reduxForm({
+  validate
+})(TestForm)
 
 
