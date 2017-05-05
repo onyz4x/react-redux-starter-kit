@@ -1,17 +1,35 @@
 import React, {Component} from 'react'
-import {Row, Col, Button} from 'antd'
+import {Row, Col, Button, Modal} from 'antd'
 import AppTable from 'components/AppTable'
 import AppButton from 'components/AppButton'
+import TextField from 'components/Form/TextField'
 import request from 'utils/request'
-
+import {reduxForm, Field} from 'redux-form';
+import FormContainer from './FormContainer'
+import ModalContainer from './ModalContainer'
+import TestForm from './TestForm'
 
 export class Page extends Component {
 
 
   constructor(props) {
     super();
-    this.state = {
-      metadata: {}
+    if (props.metadata == undefined) {
+      this.state = {
+        metadata: {}
+      }
+    }
+    else {
+      let metadata = JSON.parse(JSON.stringify(props.metadata));
+      let page = metadata.pages.find(p => p.id == props.id);
+      page.default = true;
+      metadata.pages = [page];
+
+      console.log(metadata);
+      this.state = {
+        metadata: metadata
+
+      }
     }
   }
 
@@ -23,19 +41,29 @@ export class Page extends Component {
   }
 
   componentDidMount() {
+    if (this.props.metadata == undefined) {
+      request(`http://localhost:3005/metadata/${this.props.params.id}`,
+        {}, this.updateMetadata.bind(this)
+      )
+    }
+  }
 
-    request(`http://localhost:3005/metadata/${this.props.params.id}`,
-      {}, this.updateMetadata.bind(this)
-    )
+
+  renderModalPage() {
+    let modals = this.state.metadata.pages.filter(p => p.template == "modal" && !!p.default == false);
+    let results = []
+    modals.forEach(m => {
+      results.push(<ModalContainer current={m} metadata={this.state.metadata}></ModalContainer>)
+    })
+    return results;
   }
 
   render() {
     if (!this.state.metadata.pages) return <div>loading</div>;
-    let currentPage = this.state.metadata.pages[0];
-    console.log("dddj")
+    let defaultPage = this.state.metadata.pages.find(p => p.default);
     return (
-      <div >
-        {currentPage.layout.rows.map((r, i) => <Row type={r.type} justify={r.justify} key={i}>
+      <div>
+        {defaultPage.layout.rows.map((r, i) => <Row type={r.type} justify={r.justify} key={i}>
           {r.cols.map((cs, j) => <Col style={cs.style} span={cs.span} key={j}>
             {
               cs.components.map(c => {
@@ -43,12 +71,16 @@ export class Page extends Component {
                   switch (c.type) {
                     case "table":
                       return <div><AppTable
-                        dataSource={currentPage.dataSource}
+                        dataSource={defaultPage.dataSource}
                         metadata={c}></AppTable></div>;
                     case "button":
-                      return <AppButton metadata={c}></AppButton>;
+                      return <AppButton setState={(state) => this.setState(state)} onClick={(m) => {
+                      } }
+                                        metadata={c}></AppButton>;
+                    case "textField":
+                      return <Field name={c.name} label={c.label} component={TextField}/>;
                     default:
-                      return <span>ww1</span>;
+                      return <span></span>;
                   }
                 })()
               })
@@ -57,6 +89,9 @@ export class Page extends Component {
 
           </Col>)}
         </Row>)}
+
+        {this.renderModalPage()}
+
       </div>
     )
   }

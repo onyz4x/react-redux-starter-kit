@@ -41,7 +41,7 @@ export class AppTable extends Component {
               }
 
 
-            }} href="#">{item.title}</a>)
+            }} style={{marginLeft: 5}}>{item.title}</a>)
           }
 
         })
@@ -50,41 +50,39 @@ export class AppTable extends Component {
       }
     }
 
-
     this.state = {
       columns: props.metadata.columns.concat([{
         title: '操作',
-        width: 60,
         render: (p, record) => <div>{getRowItem(record)}</div>
       }]),
-      dataSource: undefined
+      dataSource: undefined,
+      isLoading: false
     }
-
-
   }
 
   loadData() {
-    let currentDataSource = this.props.dataSource.find(d => d.key == this.props.metadata.dataSource);
-
-
-    if (currentDataSource && currentDataSource.type == "api")
-      request("http://localhost:3005" + currentDataSource.url,
-        {}, (data) => this.setState({dataSource: data})
-      )
+    this.setState({
+      isLoading: true
+    }, () => {
+      let currentDataSource = this.props.dataSource.find(d => d.key == this.props.metadata.dataSource);
+      if (currentDataSource && currentDataSource.type == "api")
+        request("http://localhost:3005" + currentDataSource.url,
+          {}, (data) => this.setState({dataSource: data, isLoading: false}), (err) => this.setState({isLoading: false})
+        )
+    })
 
   }
-
 
   componentDidMount() {
     this.loadData()
 
   }
 
-
   render() {
 
     return (
-      <Table size="middle" dataSource={this.state.dataSource} columns={this.state.columns} bordered={true} rowKey={this.props.metadata.rowkey}></Table>
+      <Table size="middle" loading={this.state.isLoading} dataSource={this.state.dataSource}
+             columns={this.state.columns} bordered={true} rowKey={this.props.metadata.rowkey}></Table>
     )
   }
 }
