@@ -14,33 +14,30 @@ export class AppButton extends Component {
   constructor(props) {
     super();
 
-    let behavior = props.metadata.behavior;
+    let behavior = props.current.behavior;
     if (behavior && behavior.type == "openModal") {
       this.handleClick = () => {
-        PubSub.publish(`${props.metadata.behavior.pageId}.openModal`, {
+        PubSub.publish(`${props.current.behavior.pageId}.openModal`, {
           dataContext: props.dataContext,
-          behavior: props.metadata.behavior
+          behavior: props.current.behavior
         });
         // props.setState({[props.metadata.behavior.pageId]: true});
-        props.onClick(props.metadata)
+        props.onClick(props.current)
       }
     } else if (behavior && behavior.type == "closeModal") {
       this.handleClick = () => {
-        PubSub.publish(`${props.metadata.behavior.pageId}.closeModal`, "");
+        PubSub.publish(`${props.current.behavior.pageId}.closeModal`, "");
 
-        props.onClick(props.metadata)
+        props.onClick(props.current)
       }
     }
     else if (behavior && behavior.type == "save") {
       this.handleClick = () => {
-        PubSub.publish(`${props.metadata.behavior.pageId}.save`, behavior);
+        PubSub.publish(`${props.current.behavior.pageId}.save`, behavior);
 
-        props.onClick(props.metadata)
+        props.onClick(props.current)
       }
     }
-
-
-    console.log(props)
   }
 
   componentDidMount() {
@@ -52,7 +49,7 @@ export class AppButton extends Component {
   // }
 
   render() {
-    const {viewStyle, title, show} = this.props.metadata;
+    const {viewStyle, title, show} = this.props.current;
 
 
     //todo: mongodb like query paser

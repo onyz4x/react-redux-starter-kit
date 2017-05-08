@@ -14,8 +14,6 @@ class FormContainer extends Component {
   constructor(props) {
     super();
 
-    console.log(props.behavior)
-
     if (props.behavior.mode == "edit") {
       this.state = {
         loading: true
@@ -67,8 +65,7 @@ mapStateToProps(state, props) {
 
   return {
     form: props.id,
-    //currentForm: state.form
-
+    //currentForm: state.form[props.id]
   }
 }
 

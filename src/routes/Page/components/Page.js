@@ -3,6 +3,7 @@ import {Row, Col, Button, Modal} from 'antd'
 import AppTable from 'components/AppTable'
 import AppButton from 'components/AppButton'
 import TextField from 'components/Form/TextField'
+import SelectField from 'components/Form/SelectField'
 import request from 'utils/request'
 import {reduxForm, Field} from 'redux-form';
 import FormContainer from './FormContainer'
@@ -75,16 +76,21 @@ export class Page extends Component {
                     case "table":
                       return <AppTable key={k} id={defaultPage.id}
                                        dataContext={this.props.dataContext}
-                                       dataSource={defaultPage.dataSource}
-                                       metadata={c}></AppTable>;
+                                       metadata={defaultPage}
+                                       current={c}></AppTable>;
                     case "button":
                       return <AppButton key={k} dataContext={this.props.dataContext} id={defaultPage.id}
                                         setState={(state) => this.setState(state)} onClick={(m) => {
-                      } }
-                                        metadata={c}></AppButton>;
+                      } } metadata={defaultPage}
+                                        current={c}></AppButton>;
                     case "textField":
-                      return <Field key={k} dataContext={this.props.dataContext} id={defaultPage.id} name={c.name}
-                                    label={c.label} component={TextField}/>;
+                      return <Field key={k} dataContext={this.props.dataContext} metadata={defaultPage}
+                                    id={defaultPage.id} name={c.name}
+                                    current={c} label={c.label} component={TextField}/>;
+                    case "selectField":
+                      return <Field key={k} dataContext={this.props.dataContext} metadata={defaultPage}
+                                    id={defaultPage.id} name={c.name} initialValues={this.props.initialValues}
+                                    current={c} label={c.label} component={SelectField}/>;
                     default:
                       return <span key={k}></span>;
                   }

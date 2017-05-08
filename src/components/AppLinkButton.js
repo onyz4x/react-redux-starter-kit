@@ -14,26 +14,26 @@ export class AppLinkButton extends Component {
   constructor(props) {
     super();
 
-    let behavior = props.metadata.behavior;
+    let behavior = props.current.behavior;
     if (behavior && behavior.type == "openModal") {
       this.handleClick = () => {
-        PubSub.publish(`${props.metadata.behavior.pageId}.openModal`, {
+        PubSub.publish(`${props.current.behavior.pageId}.openModal`, {
           dataContext: props.dataContext,
-          behavior: props.metadata.behavior
+          behavior: props.current.behavior
         });
         // props.setState({[props.metadata.behavior.pageId]: true});
-        props.onClick(props.metadata)
+        props.onClick(props.current)
       }
     } else if (behavior && behavior.type == "closeModal") {
       this.handleClick = () => {
-        PubSub.publish(`${props.metadata.behavior.pageId}.closeModal`, "");
+        PubSub.publish(`${props.current.behavior.pageId}.closeModal`, "");
 
-        props.onClick(props.metadata)
+        props.onClick(props.current)
       }
     } else if (behavior && behavior.type == "fetch") {
       this.handleClick = () => {
 
-        let currentDataSource = props.dataSource.find(d => d.key == props.metadata.behavior.dataSource);
+        let currentDataSource = props.metadata.dataSource.find(d => d.key == props.current.behavior.dataSource);
 
         if (currentDataSource && currentDataSource.type == "api") {
 
@@ -54,13 +54,14 @@ export class AppLinkButton extends Component {
             })
         }
 
-        props.onClick(props.metadata)
+        props.onClick(props.current)
       }
     }
 
   }
 
   componentDidMount() {
+
   }
 
 
@@ -69,7 +70,7 @@ export class AppLinkButton extends Component {
   // }
 
   render() {
-    const {title, show} = this.props.metadata;
+    const {title, show} = this.props.current;
     //todo: mongodb like query paser
     if (show) {
       for (let x in show) {

@@ -19,15 +19,16 @@ export class AppTable extends Component {
 
     let getRowItem = (record) => {
       let rowItems = []
-      if (props.metadata.rowItems != undefined) {
+      if (props.current.rowItems != undefined) {
 
-        props.metadata.rowItems.forEach((item, i) => {
+        props.current.rowItems.forEach((item, i) => {
           if (item.type == "button") {
-            rowItems.push(<AppLinkButton dataContext={record}  key={i} id={props.id} dataSource={props.dataSource} metadata={item}
+            rowItems.push(<AppLinkButton dataContext={record} key={i} id={props.id} metadata={props.metadata}
+                                         current={item}
                                          onClick={() => {
 
 
-                                         }} >{item.title}</AppLinkButton>)
+                                         }}>{item.title}</AppLinkButton>)
           }
 
         })
@@ -37,7 +38,7 @@ export class AppTable extends Component {
     }
 
     this.state = {
-      columns: props.metadata.columns.concat([{
+      columns: props.current.columns.concat([{
         title: '操作',
         render: (p, record, i) => <div key={i}>{getRowItem(record)}</div>
       }]),
@@ -55,7 +56,7 @@ export class AppTable extends Component {
     this.setState({
       isLoading: true
     }, () => {
-      let currentDataSource = this.props.dataSource.find(d => d.key == this.props.metadata.dataSource);
+      let currentDataSource = this.props.metadata.dataSource.find(d => d.key == this.props.current.dataSource);
       if (currentDataSource && currentDataSource.type == "api")
         request("http://localhost:3005" + currentDataSource.url,
           {}, (data) => this.setState({dataSource: data, isLoading: false}), (err) => this.setState({isLoading: false})
@@ -76,7 +77,7 @@ export class AppTable extends Component {
 
     return (
       <Table size="middle" loading={this.state.isLoading} dataSource={this.state.dataSource}
-             columns={this.state.columns} bordered={true} rowKey={this.props.metadata.rowKey}></Table>
+             columns={this.state.columns} bordered={true} rowKey={this.props.current.rowKey}></Table>
     )
   }
 }

@@ -8,7 +8,6 @@ export class Test2 extends Component {
 
 
   componentDidMount() {
-    console.log(this.props.test2Data.toJS())
 
 
     this.props.fetchTest2();
@@ -41,7 +40,6 @@ export class Test2 extends Component {
 
         {a}
         <Test2Child onOk={(aa) => {
-          console.log(aa);
         }}></Test2Child>
       </div>
     )
