@@ -8,7 +8,7 @@ import PubSub from 'pubsub-js'
 
 import {Button} from 'antd'
 
-export class AppButton extends Component {
+export class AppLinkButton extends Component {
 
 
   constructor(props) {
@@ -30,17 +30,34 @@ export class AppButton extends Component {
 
         props.onClick(props.metadata)
       }
-    }
-    else if (behavior && behavior.type == "save") {
+    } else if (behavior && behavior.type == "fetch") {
       this.handleClick = () => {
-        PubSub.publish(`${props.metadata.behavior.pageId}.save`, behavior);
+
+        let currentDataSource = props.dataSource.find(d => d.key == props.metadata.behavior.dataSource);
+
+        if (currentDataSource && currentDataSource.type == "api") {
+
+          let body = {};
+          if (props.dataContext)
+            currentDataSource.params.forEach(p => {
+              body[p.key] = props.dataContext[p.value]
+            })
+          request("http://localhost:3005" + currentDataSource.url,
+            {
+              method: currentDataSource.method,
+              body: JSON.stringify(body)
+            }
+            , (data) => {
+
+              PubSub.publish(`${props.id}.reload`, "")
+
+            })
+        }
 
         props.onClick(props.metadata)
       }
     }
 
-
-    console.log(props)
   }
 
   componentDidMount() {
@@ -52,9 +69,7 @@ export class AppButton extends Component {
   // }
 
   render() {
-    const {viewStyle, title, show} = this.props.metadata;
-
-
+    const {title, show} = this.props.metadata;
     //todo: mongodb like query paser
     if (show) {
       for (let x in show) {
@@ -65,16 +80,16 @@ export class AppButton extends Component {
     }
 
     return (
-      <Button style={{margin: 5}} onClick={() =>
+      <a style={{marginLeft: 5}} onClick={() =>
 
       this.handleClick && this.handleClick()
-      } type={viewStyle}>
+      }>
         {title}
-      </Button>
+      </a>
     )
   }
 }
 
-AppButton.propTypes = {}
+AppLinkButton.propTypes = {}
 
-export default AppButton
+export default AppLinkButton

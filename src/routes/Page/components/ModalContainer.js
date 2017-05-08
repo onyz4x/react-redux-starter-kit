@@ -22,8 +22,12 @@ class ModalContainer extends Component {
       this.closeModal()
     })
 
-    PubSub.subscribe(`${props.current.id}.openModal`, () => {
-      this.openModal()
+    PubSub.subscribe(`${props.current.id}.openModal`, (msg, data) => {
+      this.setState({
+        isOpen: true,
+        behavior: data.behavior,
+        dataContext: data.dataContext
+      })
     })
 
   }
@@ -34,15 +38,10 @@ class ModalContainer extends Component {
     })
   }
 
-  openModal() {
-    this.setState({
-      isOpen: true
-    })
-  }
-
   renderModalContent(m) {
     if (m.type == "form") {
-      return <FormContainer id={m.id} {...this.props}/>
+      return <FormContainer dataContext={this.state.dataContext} behavior={this.state.behavior}
+                            id={m.id}  {...this.props}/>
     }
     else {
       return <Page id={m.id} {...this.props}/>

@@ -6,6 +6,8 @@ import React, {Component} from 'react'
 import request from 'utils/request'
 import PubSub from 'pubsub-js'
 
+import AppLinkButton from './AppLinkButton'
+
 import {Table, Button} from 'antd'
 
 export class AppTable extends Component {
@@ -21,28 +23,11 @@ export class AppTable extends Component {
 
         props.metadata.rowItems.forEach((item, i) => {
           if (item.type == "button") {
-            rowItems.push(<a key={i} onClick={() => {
-              let currentDataSource = this.props.dataSource.find(d => d.key == item.behavior.dataSource);
-
-              if (currentDataSource && currentDataSource.type == "api") {
-
-                let body = {};
-                currentDataSource.params.forEach(p => {
-                  body[p.key] = record[p.value]
-                })
-                request("http://localhost:3005" + currentDataSource.url,
-                  {
-                    method: currentDataSource.method,
-                    body: JSON.stringify(body)
-                  }
-                  , (data) => {
-                    this.loadData();
-
-                  })
-              }
+            rowItems.push(<AppLinkButton dataContext={record}  key={i} id={props.id} dataSource={props.dataSource} metadata={item}
+                                         onClick={() => {
 
 
-            }} style={{marginLeft: 5}}>{item.title}</a>)
+                                         }} >{item.title}</AppLinkButton>)
           }
 
         })

@@ -51,7 +51,8 @@ export class Page extends Component {
     let modals = this.state.metadata.pages.filter(p => p.display == "modal" && !!p.default == false);
     let results = []
     modals.forEach(m => {
-      results.push(<ModalContainer parentId={id} key={m.id} current={m} metadata={this.state.metadata}></ModalContainer>)
+      results.push(<ModalContainer parentId={id} key={m.id} current={m}
+                                   metadata={this.state.metadata}></ModalContainer>)
     })
     return results;
   }
@@ -73,14 +74,17 @@ export class Page extends Component {
                   switch (c.type) {
                     case "table":
                       return <AppTable key={k} id={defaultPage.id}
+                                       dataContext={this.props.dataContext}
                                        dataSource={defaultPage.dataSource}
                                        metadata={c}></AppTable>;
                     case "button":
-                      return <AppButton key={k} id={defaultPage.id} setState={(state) => this.setState(state)} onClick={(m) => {
+                      return <AppButton key={k} dataContext={this.props.dataContext} id={defaultPage.id}
+                                        setState={(state) => this.setState(state)} onClick={(m) => {
                       } }
                                         metadata={c}></AppButton>;
                     case "textField":
-                      return <Field key={k} id={defaultPage.id} name={c.name} label={c.label} component={TextField}/>;
+                      return <Field key={k} dataContext={this.props.dataContext} id={defaultPage.id} name={c.name}
+                                    label={c.label} component={TextField}/>;
                     default:
                       return <span key={k}></span>;
                   }
