@@ -52,11 +52,17 @@ export class AppTable extends Component {
 
 
     PubSub.subscribe(`${props.id}.reload`, (msg, data) => {
-      this.loadData(null, data);
+      if (data != undefined && data != "")
+        this.query = data;
+      this.loadData(null);
+    })
+
+    PubSub.subscribe(`${props.id}.setQuery`, (msg, data) => {
+      this.query = data;
     })
   }
 
-  loadData(pagination, query) {
+  loadData(pagination) {
     this.setState({
       isLoading: true
     }, () => {
@@ -72,8 +78,8 @@ export class AppTable extends Component {
           url += `?pageIndex=${1}&pageSize=${currentDataSource.pageSize}`
 
         }
-        if (query) {
-          url += "&" + qs.stringify(query)
+        if (this.query) {
+          url += "&" + qs.stringify(this.query)
         }
         request(url,
           {}, (data) => {

@@ -71,7 +71,6 @@ export class AppLinkButton extends Component {
 
   render() {
     const {title, show} = this.props.current;
-    //todo: mongodb like query paser
     if (show) {
       var r = sift.keyOf(show, this.props);
       if (!r)
@@ -80,7 +79,6 @@ export class AppLinkButton extends Component {
 
     return (
       <a style={{marginLeft: 5}} onClick={() =>
-
       this.handleClick && this.handleClick()
       }>
         {title}

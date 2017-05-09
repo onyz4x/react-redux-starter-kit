@@ -23,9 +23,10 @@ export class SelectField extends Component {
     if (cascadeWith) {
       PubSub.subscribe(`${props.pageId}.${cascadeWith}.changed`, (msg, data) => {
         props.input.onChange("");
-        this.loadData(props, {
-          [cascadeWith]: data
-        })
+        if (data != undefined)
+          this.loadData(props, {
+            [cascadeWith]: data
+          })
       })
       if (props.initialValues != undefined && props.initialValues[cascadeWith] != undefined) {
         this.loadData(props, {[cascadeWith]: props.initialValues[cascadeWith]})

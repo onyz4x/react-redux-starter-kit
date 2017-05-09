@@ -22,6 +22,24 @@ export class AppSearch extends Component {
   componentDidMount() {
   }
 
+
+  onChange(value) {
+    let query = null;
+    if (value != undefined && value.trim() != "") {
+      query = {
+        "$or": []
+      }
+
+      this.props.current.behavior.criteria.forEach(c => {
+        query["$or"].push({
+          [c]: {$regex: value}
+        })
+      })
+    }
+
+    PubSub.publish(`${this.props.current.behavior.target}.setQuery`, query)
+  }
+
   onSearch(value) {
 
     let query = null;
@@ -48,11 +66,9 @@ export class AppSearch extends Component {
     return (
       <Search
         placeholder="请输入搜索内容"
-
-
-        onSearch={(value =>
-            this.onSearch(value)
-        )}
+        onChange={e => this.onChange(e.target.value)}
+        onSearch={value => this.onSearch(value)
+        }
       />
     )
   }
