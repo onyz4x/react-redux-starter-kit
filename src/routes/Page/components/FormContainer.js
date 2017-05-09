@@ -34,13 +34,13 @@ class FormContainer extends Component {
             method: dataSource.method,
           }
           , (data) => {
-
-            let c = data[0]
-            this.setState({
-              loading: false,
-              initialValues: c
-            })
-
+            if (data.success) {
+              let c = data.data[0]
+              this.setState({
+                loading: false,
+                initialValues: c
+              })
+            }
           })
       }
     }

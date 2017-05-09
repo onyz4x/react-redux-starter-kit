@@ -43,7 +43,10 @@ export class AppTable extends Component {
         render: (p, record, i) => <div key={i}>{getRowItem(record)}</div>
       }]),
       dataSource: undefined,
-      isLoading: false
+      isLoading: false,
+      pagination: {
+        current: 1,
+      }
     }
 
 
@@ -52,15 +55,36 @@ export class AppTable extends Component {
     })
   }
 
-  loadData() {
+  loadData(pagination) {
     this.setState({
       isLoading: true
     }, () => {
       let currentDataSource = this.props.metadata.dataSource.find(d => d.key == this.props.current.dataSource);
-      if (currentDataSource && currentDataSource.type == "api")
-        request("http://localhost:3005" + currentDataSource.url,
-          {}, (data) => this.setState({dataSource: data, isLoading: false}), (err) => this.setState({isLoading: false})
+      if (currentDataSource && currentDataSource.type == "api") {
+
+        let url = "http://localhost:3005" + currentDataSource.url;
+        if (pagination) {
+
+          url += `?pageIndex=${pagination.current}&pageSize=${currentDataSource.pageSize}`
+        }
+        else {
+          url += `?pageIndex=${1}&pageSize=${currentDataSource.pageSize}`
+
+        }
+        request(url,
+          {}, (data) => {
+            if (data.success)
+              this.setState({
+                dataSource: data.data, isLoading: false,
+                pagination: {
+                  pageSize: data.pageSize,
+                  current: data.pageIndex,
+                  total: data.total
+                }
+              }), (err) => this.setState({isLoading: false})
+          }
         )
+      }
     })
 
   }
@@ -73,10 +97,16 @@ export class AppTable extends Component {
     PubSub.unsubscribe(this.props.id);
   }
 
+  pageChange(pagination) {
+    this.loadData(pagination)
+  }
+
   render() {
 
     return (
       <Table size="middle" loading={this.state.isLoading} dataSource={this.state.dataSource}
+             pagination={this.state.pagination}
+             onChange={(page) => this.pageChange(page)}
              columns={this.state.columns} bordered={true} rowKey={this.props.current.rowKey}></Table>
     )
   }

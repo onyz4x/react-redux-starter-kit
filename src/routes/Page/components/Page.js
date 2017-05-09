@@ -34,9 +34,10 @@ export class Page extends Component {
 
   updateMetadata(data) {
 
-    this.setState({
-      metadata: data
-    })
+    if (data.success)
+      this.setState({
+        metadata: data.data
+      })
   }
 
   componentDidMount() {

@@ -48,8 +48,8 @@ export class AppLinkButton extends Component {
               body: JSON.stringify(body)
             }
             , (data) => {
-
-              PubSub.publish(`${props.id}.reload`, "")
+              if (data.success)
+                PubSub.publish(`${props.id}.reload`, "")
 
             })
         }

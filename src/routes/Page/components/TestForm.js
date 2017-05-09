@@ -52,9 +52,15 @@ export class TestForm extends Component {
             body: JSON.stringify(values)
           }
           , (data) => {
-            PubSub.publish(`${props.id}.closeModal`, "");
-            PubSub.publish(`${props.parentId}.reload`, "")
-            message.success("保存成功！");
+            if(data.success) {
+              PubSub.publish(`${props.id}.closeModal`, "");
+              PubSub.publish(`${props.parentId}.reload`, "")
+              message.success("保存成功！");
+            }
+            else
+            {
+              notification.error(err.message)
+            }
           }, (err) => {
             notification.error(err.message)
 

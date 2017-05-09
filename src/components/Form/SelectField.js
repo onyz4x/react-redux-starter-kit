@@ -46,10 +46,11 @@ export class SelectField extends Component {
           method: currentDataSource.method,
         }
         , (data) => {
-          this.setState({
-            dataSource: data
+          if (data.success)
+            this.setState({
+              dataSource: data.data
 
-          })
+            })
 
 
         }
