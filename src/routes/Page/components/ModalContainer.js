@@ -41,10 +41,10 @@ class ModalContainer extends Component {
   renderModalContent(m) {
     if (m.type == "form") {
       return <FormContainer dataContext={this.state.dataContext} behavior={this.state.behavior}
-                            id={m.id}  {...this.props}/>
+                            id={m.id}  pageId={m.id} {...this.props}/>
     }
     else {
-      return <Page id={m.id} {...this.props}/>
+      return <Page id={m.id} pageId={m.id} {...this.props}/>
     }
   }
 

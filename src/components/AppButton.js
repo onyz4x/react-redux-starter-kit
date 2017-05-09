@@ -7,7 +7,7 @@ import request from 'utils/request'
 import PubSub from 'pubsub-js'
 
 import {Button} from 'antd'
-
+import sift from 'sift'
 export class AppButton extends Component {
 
 
@@ -33,7 +33,7 @@ export class AppButton extends Component {
     }
     else if (behavior && behavior.type == "save") {
       this.handleClick = () => {
-        PubSub.publish(`${props.current.behavior.pageId}.save`, behavior);
+        PubSub.publish(`${props.pageId}.save`, behavior);
 
         props.onClick(props.current)
       }
@@ -50,19 +50,13 @@ export class AppButton extends Component {
 
   render() {
     const {viewStyle, title, show} = this.props.current;
-
-
-    //todo: mongodb like query paser
     if (show) {
-      for (let x in show) {
-        if (this.props.dataContext[x] != show[x]) {
-          return <element></element>
-        }
-      }
+      var r = sift.keyOf(show, this.props);
+      if (!r)
+        return <element></element>
     }
-
     return (
-      <Button style={{margin: 5}} onClick={() =>
+      <Button style={{marginLeft: 3,}} onClick={() =>
 
       this.handleClick && this.handleClick()
       } type={viewStyle}>

@@ -5,7 +5,7 @@
 import React, {Component} from 'react'
 import request from 'utils/request'
 import PubSub from 'pubsub-js'
-
+import sift from 'sift'
 import {Button} from 'antd'
 
 export class AppLinkButton extends Component {
@@ -49,7 +49,7 @@ export class AppLinkButton extends Component {
             }
             , (data) => {
               if (data.success)
-                PubSub.publish(`${props.id}.reload`, "")
+                PubSub.publish(`${behavior.target}.reload`, "")
 
             })
         }
@@ -73,11 +73,9 @@ export class AppLinkButton extends Component {
     const {title, show} = this.props.current;
     //todo: mongodb like query paser
     if (show) {
-      for (let x in show) {
-        if (this.props.dataContext[x] != show[x]) {
-          return <element></element>
-        }
-      }
+      var r = sift.keyOf(show, this.props);
+      if (!r)
+        return <element></element>
     }
 
     return (

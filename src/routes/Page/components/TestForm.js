@@ -41,7 +41,7 @@ export class TestForm extends Component {
   constructor(props) {
     super();
 
-    PubSub.subscribe(`${props.id}.save`, (msg, behavior) => {
+    PubSub.subscribe(`${props.pageId}.save`, (msg, behavior) => {
       props.handleSubmit((values) => {
 
         let dataSource = props.current.dataSource.find(d => d.key == behavior.dataSource);
@@ -52,13 +52,12 @@ export class TestForm extends Component {
             body: JSON.stringify(values)
           }
           , (data) => {
-            if(data.success) {
-              PubSub.publish(`${props.id}.closeModal`, "");
-              PubSub.publish(`${props.parentId}.reload`, "")
+            if (data.success) {
+              PubSub.publish(`${props.pageId}.closeModal`, "");
+              PubSub.publish(`${behavior.target}.reload`, "")
               message.success("保存成功！");
             }
-            else
-            {
+            else {
               notification.error(err.message)
             }
           }, (err) => {

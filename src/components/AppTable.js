@@ -7,7 +7,7 @@ import request from 'utils/request'
 import PubSub from 'pubsub-js'
 
 import AppLinkButton from './AppLinkButton'
-
+import qs from 'qs';
 import {Table, Button} from 'antd'
 
 export class AppTable extends Component {
@@ -23,7 +23,8 @@ export class AppTable extends Component {
 
         props.current.rowItems.forEach((item, i) => {
           if (item.type == "button") {
-            rowItems.push(<AppLinkButton dataContext={record} key={i} id={props.id} metadata={props.metadata}
+            rowItems.push(<AppLinkButton dataContext={record} key={i} id={item.id} pageId={props.pageId}
+                                         metadata={props.metadata}
                                          current={item}
                                          onClick={() => {
 
@@ -50,12 +51,12 @@ export class AppTable extends Component {
     }
 
 
-    PubSub.subscribe(`${props.id}.reload`, () => {
-      this.loadData();
+    PubSub.subscribe(`${props.id}.reload`, (msg, data) => {
+      this.loadData(null, data);
     })
   }
 
-  loadData(pagination) {
+  loadData(pagination, query) {
     this.setState({
       isLoading: true
     }, () => {
@@ -70,6 +71,9 @@ export class AppTable extends Component {
         else {
           url += `?pageIndex=${1}&pageSize=${currentDataSource.pageSize}`
 
+        }
+        if (query) {
+          url += "&" + qs.stringify(query)
         }
         request(url,
           {}, (data) => {
@@ -106,6 +110,7 @@ export class AppTable extends Component {
     return (
       <Table size="middle" loading={this.state.isLoading} dataSource={this.state.dataSource}
              pagination={this.state.pagination}
+             style={{marginTop: 3}}
              onChange={(page) => this.pageChange(page)}
              columns={this.state.columns} bordered={true} rowKey={this.props.current.rowKey}></Table>
     )

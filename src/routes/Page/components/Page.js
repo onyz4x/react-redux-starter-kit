@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Row, Col, Button, Modal} from 'antd'
 import AppTable from 'components/AppTable'
 import AppButton from 'components/AppButton'
+import AppSearch from 'components/AppSearch'
 import TextField from 'components/Form/TextField'
 import SelectField from 'components/Form/SelectField'
 import request from 'utils/request'
@@ -64,33 +65,40 @@ export class Page extends Component {
     let defaultPage = this.state.metadata.pages.find(p => p.default);
 
     if (this.props.metadata == undefined && defaultPage.type == "form") {
-      return <FormContainer id={defaultPage.id} current={defaultPage} metadata={this.state.metadata}/>
+      return <FormContainer id={defaultPage.id} pageId={defaultPage.id} current={defaultPage}
+                            metadata={this.state.metadata}/>
     }
     return (
       <div>
-        {defaultPage.layout.rows.map((r, i) => <Row type={r.type} justify={r.justify} key={i}>
+        {defaultPage.layout.rows.map((r, i) => <Row type={r.type} align={r.align} justify={r.justify} key={i}>
           {r.cols.map((cs, j) => <Col style={cs.style} span={cs.span} key={`${i}.${j}`}>
             {
               cs.components.map((c, k) => {
                 return (() => {
                   switch (c.type) {
                     case "table":
-                      return <AppTable key={k} id={defaultPage.id}
+                      return <AppTable key={k} id={c.id} pageId={defaultPage.id}
                                        dataContext={this.props.dataContext}
                                        metadata={defaultPage}
                                        current={c}></AppTable>;
                     case "button":
-                      return <AppButton key={k} dataContext={this.props.dataContext} id={defaultPage.id}
+                      return <AppButton key={k} dataContext={this.props.dataContext} id={c.id} pageId={defaultPage.id}
                                         setState={(state) => this.setState(state)} onClick={(m) => {
                       } } metadata={defaultPage}
                                         current={c}></AppButton>;
+                    case "search":
+                      return <AppSearch key={k} dataContext={this.props.dataContext} id={c.id} pageId={defaultPage.id}
+                                        setState={(state) => this.setState(state)} onClick={(m) => {
+                      } } metadata={defaultPage}
+                                        current={c}></AppSearch>;
                     case "textField":
                       return <Field key={k} dataContext={this.props.dataContext} metadata={defaultPage}
-                                    id={defaultPage.id} name={c.name}
+                                    id={c.id} pageId={defaultPage.id} name={c.name}
                                     current={c} label={c.label} component={TextField}/>;
                     case "selectField":
                       return <Field key={k} dataContext={this.props.dataContext} metadata={defaultPage}
-                                    id={defaultPage.id} name={c.name} initialValues={this.props.initialValues}
+                                    id={c.id} pageId={defaultPage.id} name={c.name}
+                                    initialValues={this.props.initialValues}
                                     current={c} label={c.label} component={SelectField}/>;
                     default:
                       return <span key={k}></span>;

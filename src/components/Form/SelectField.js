@@ -21,7 +21,7 @@ export class SelectField extends Component {
     let {cascadeWith} = props.current;
 
     if (cascadeWith) {
-      PubSub.subscribe(`${props.id}.${cascadeWith}.changed`, (msg, data) => {
+      PubSub.subscribe(`${props.pageId}.${cascadeWith}.changed`, (msg, data) => {
         props.input.onChange("");
         this.loadData(props, {
           [cascadeWith]: data
@@ -62,7 +62,7 @@ export class SelectField extends Component {
 
   componentWillUnmount() {
     //  PubSub.unsubscribe(`${this.props.id}.${this.props.input.name}.changed`)
-    PubSub.unsubscribe(`${this.props.id}.${this.props.current.cascadeWith}.changed`)
+    PubSub.unsubscribe(`${this.props.pageId}.${this.props.current.cascadeWith}.changed`)
   }
 
   render() {
@@ -88,7 +88,7 @@ export class SelectField extends Component {
           else {
             input.onChange(e);
           }
-          PubSub.publish(`${this.props.id}.${input.name}.changed`, e)
+          PubSub.publish(`${this.props.pageId}.${input.name}.changed`, e)
           okChange && okChange(e)
         } }
                 {...custom} size="default" allowClear={input.value == "" ? false : true} showArrow={true}
