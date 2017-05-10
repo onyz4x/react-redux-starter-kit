@@ -78,8 +78,10 @@ export class AppLinkButton extends Component {
     }
 
     return (
-      <a style={{marginLeft: 5}} onClick={() =>
-      this.handleClick && this.handleClick()
+      <a style={{marginLeft: 5}} onClick={(e) => {
+        this.handleClick && this.handleClick();
+        e.stopPropagation()
+      }
       }>
         {title}
       </a>

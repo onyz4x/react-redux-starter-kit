@@ -60,6 +60,18 @@ export class AppTable extends Component {
     PubSub.subscribe(`${props.id}.setQuery`, (msg, data) => {
       this.query = data;
     })
+
+    let params = {};
+    if (props.current.target != undefined) {
+      PubSub.subscribe(`${props.current.target}.${props.current.targetAction}`, (msg, data) => {
+        if (props.current.targetParams != undefined) {
+          props.current.targetParams.forEach(p => params[p.key] = data[p.value])
+        }
+        this.query = params;
+        this.loadData()
+
+      })
+    }
   }
 
   loadData(pagination) {
@@ -81,6 +93,10 @@ export class AppTable extends Component {
         if (this.query) {
           url += "&" + qs.stringify(this.query)
         }
+        if (currentDataSource.fields != undefined && currentDataSource.fields.length > 0) {
+          url += "&" + qs.stringify({fields: currentDataSource.fields})
+        }
+
         request(url,
           {}, (data) => {
             if (data.success)
@@ -100,7 +116,8 @@ export class AppTable extends Component {
   }
 
   componentDidMount() {
-    this.loadData()
+    if (this.props.current.fetchDataOnLoaded)
+      this.loadData()
   }
 
   componentWillUnmount() {
@@ -111,10 +128,29 @@ export class AppTable extends Component {
     this.loadData(pagination)
   }
 
+  rowClick(record) {
+    const current = this.props.current;
+    if (current.enableRowClick)
+      this.setState({selectedCodeType: record.id}, () => {
+
+        PubSub.publish(`${current.id}.changed`, record)
+
+        // if (current.target != undefined) {
+        //   let params = {};
+        //   if (current.targetParams != undefined) {
+        //     current.targetParams.forEach(p => params[p.key] = record[p.value])
+        //   }
+        //   PubSub.publish(`${current.target}.${current.targetAction}`, params)
+        // }
+
+      })
+  }
+
   render() {
 
     return (
       <Table size="middle" loading={this.state.isLoading} dataSource={this.state.dataSource}
+             onRowClick={(record) => this.rowClick(record)}
              pagination={this.state.pagination}
              style={{marginTop: 3}}
              onChange={(page) => this.pageChange(page)}

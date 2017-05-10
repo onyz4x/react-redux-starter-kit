@@ -36,6 +36,10 @@ class FormContainer extends Component {
           , (data) => {
             if (data.success) {
               let c = data.data[0]
+              if (dataSource.resultsMapping != undefined) {
+                dataSource.resultsMapping.forEach(r => c[r.key] = c[r.value])
+              }
+
               this.setState({
                 loading: false,
                 initialValues: c
@@ -46,8 +50,15 @@ class FormContainer extends Component {
     }
 
     else {
-      this.state = {
-        loading: false,
+      if (props.dataContext == undefined)
+        this.state = {
+          loading: false
+        }
+      else {
+        this.state = {
+          loading: false,
+          initialValues: {id: props.dataContext.id}
+        }
       }
     }
   }

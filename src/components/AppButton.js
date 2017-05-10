@@ -14,11 +14,36 @@ export class AppButton extends Component {
   constructor(props) {
     super();
 
+
+    this.state = {
+      disabled: props.current.disabled
+    }
+
+    PubSub.subscribe(`${props.id}.disabled`, (msg, data) => {
+      this.setState({
+        disabled: data
+      })
+    })
+
+    if (props.current.target != undefined) {
+      let params = {};
+      PubSub.subscribe(`${props.current.target}.${props.current.targetAction}`, (msg, data) => {
+        if (props.current.targetParams != undefined) {
+          props.current.targetParams.forEach(p => params[p.key] = data[p.value])
+        }
+       // PubSub.publish()
+        this.dataContext = params;
+
+      })
+    }
+
+
     let behavior = props.current.behavior;
     if (behavior && behavior.type == "openModal") {
       this.handleClick = () => {
+        debugger;
         PubSub.publish(`${props.current.behavior.pageId}.openModal`, {
-          dataContext: props.dataContext,
+          dataContext: this.dataContext || props.dataContext,
           behavior: props.current.behavior
         });
         // props.setState({[props.metadata.behavior.pageId]: true});
@@ -56,7 +81,7 @@ export class AppButton extends Component {
         return <element></element>
     }
     return (
-      <Button style={{marginLeft: 3,}} onClick={() =>
+      <Button disabled={this.state.disabled} style={{marginLeft: 3,}} onClick={() =>
 
       this.handleClick && this.handleClick()
       } type={viewStyle}>
