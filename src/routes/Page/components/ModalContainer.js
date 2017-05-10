@@ -57,7 +57,7 @@ class ModalContainer extends Component {
     const {current} = this.props;
 
     if (!this.state.isOpen) return <element></element>;
-    return <Modal onCancel={() => this.closeModal()} width={current.width} title={current.title}
+    return <Modal onCancel={() => this.closeModal()} width={current.width} title={this.state.dataContext.title}
                   visible={this.state.isOpen} footer="">
       {this.renderModalContent(current)}
     </Modal>
