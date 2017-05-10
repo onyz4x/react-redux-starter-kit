@@ -5,8 +5,16 @@
   // Some best-practice CSS that's useful for most apps
   // Just remove them if they're not what you want
 
+  .tableSelected
+  {
+    background-color: #d2eafb;
+  }
 }
 
 .activeRoute {
   font-weight: bold;
+}
+.tableSelected
+{
+  background-color: gray;
 }

@@ -4,8 +4,17 @@
 import React from 'react'
 import {Input, Form} from 'antd';
 const FormItem = Form.Item;
+import sift from 'sift'
+
 const TextField = ({input, label, hasFeedback, labelSpan, okChange, wrapperSpan, showRequiredStar, meta: {asyncValidating, touched, error}, ...custom}) => {
 
+  let disabled = false;
+
+  if (custom.current.disabled) {
+    var r = sift.keyOf(custom.current.disabled, custom);
+
+    if (r) disabled = true;
+  }
   return (
 
     <FormItem
@@ -16,7 +25,7 @@ const TextField = ({input, label, hasFeedback, labelSpan, okChange, wrapperSpan,
       validateStatus={asyncValidating ? "validating" : ((touched && error) ? "error" : "")}
       help={touched && error} required={showRequiredStar ? true : false}
     >
-      <Input {...input} size="default" {...custom} onChange={(e) => {
+      <Input disabled={disabled} {...input} size="default" {...custom} onChange={(e) => {
         input.onChange(e);
         okChange && okChange(e)
       } }/>

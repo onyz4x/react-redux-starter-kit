@@ -57,6 +57,18 @@ export class AppTable extends Component {
       this.loadData(null);
     })
 
+    PubSub.subscribe(`${props.id}.clearSelect`, () => {
+      this.setState({
+        selectedRow: undefined
+      })
+    })
+
+    PubSub.subscribe(`${props.id}.clear`, () => {
+      this.setState({
+        dataSource: []
+      })
+    })
+
     PubSub.subscribe(`${props.id}.setQuery`, (msg, data) => {
       this.query = data;
     })
@@ -70,6 +82,33 @@ export class AppTable extends Component {
         this.query = params;
         this.loadData()
 
+      })
+    }
+
+    if (props.current.subscribes != undefined) {
+
+      props.current.subscribes.forEach(s => {
+        PubSub.subscribe(s.event, (msg, data) => {
+          if (s.pubs) {
+            s.pubs.forEach(p => {
+              if (p.payloadMapping) {
+                let temp = {};
+
+                //todo: merge dataContext
+                p.payloadMapping.forEach(m => temp[m.key] = data[m.value])
+                PubSub.publish(p.event,
+                  temp
+                )
+              }
+              else
+                PubSub.publish(p.event,
+
+                  p.payload,
+                )
+            })
+
+          }
+        })
       })
     }
   }
@@ -99,7 +138,7 @@ export class AppTable extends Component {
 
         request(url,
           {}, (data) => {
-            if (data.success)
+            if (data.success) {
               this.setState({
                 dataSource: data.data, isLoading: false,
                 pagination: {
@@ -107,8 +146,16 @@ export class AppTable extends Component {
                   current: data.pageIndex,
                   total: data.total
                 }
-              }), (err) => this.setState({isLoading: false})
-          }
+              })
+
+
+              if (this.props.current.enableRowClick && !data.data.find(d => d[this.props.current.rowKey] == this.state.selectedRow)) {
+                console.log("unfound info")
+                PubSub.publish(`${this.props.id}.clearSelect`, "")
+              }
+            }
+
+          }, (err) => this.setState({isLoading: false})
         )
       }
     })
@@ -131,7 +178,7 @@ export class AppTable extends Component {
   rowClick(record) {
     const current = this.props.current;
     if (current.enableRowClick)
-      this.setState({selectedCodeType: record.id}, () => {
+      this.setState({selectedRow: record[current.rowKey]}, () => {
 
         PubSub.publish(`${current.id}.changed`, record)
 
@@ -153,6 +200,7 @@ export class AppTable extends Component {
              onRowClick={(record) => this.rowClick(record)}
              pagination={this.state.pagination}
              style={{marginTop: 3}}
+             rowClassName={(record) => record[this.props.current.rowKey] == this.state.selectedRow ? "tableSelected" : ""}
              onChange={(page) => this.pageChange(page)}
              columns={this.state.columns} bordered={true} rowKey={this.props.current.rowKey}></Table>
     )
