@@ -25,15 +25,29 @@ export class AppButton extends Component {
       })
     })
 
-    if (props.current.target != undefined) {
-      let params = {};
-      PubSub.subscribe(`${props.current.target}.${props.current.targetAction}`, (msg, data) => {
-        if (props.current.targetParams != undefined) {
-          props.current.targetParams.forEach(p => params[p.key] = data[p.value])
-        }
-       // PubSub.publish()
-        this.dataContext = params;
+    PubSub.subscribe(`${props.id}.dataContext`, (msg, data) => {
+      this.setState({
+        dataContext: data
+      })
+    })
 
+    if (props.current.subscribes != undefined) {
+
+      props.current.subscribes.forEach(s => {
+        PubSub.subscribe(s.event, (msg, data) => {
+          if (s.pubs) {
+            s.pubs.forEach(p => {
+              if (p.payloadMapping) {
+                let temp = {};
+                p.payloadMapping.forEach(m => temp[m.key] = data[m.value])
+                PubSub.publish(p.event, temp)
+              }
+              else
+                PubSub.publish(p.event, p.payload)
+            })
+
+          }
+        })
       })
     }
 
@@ -41,9 +55,8 @@ export class AppButton extends Component {
     let behavior = props.current.behavior;
     if (behavior && behavior.type == "openModal") {
       this.handleClick = () => {
-        debugger;
         PubSub.publish(`${props.current.behavior.pageId}.openModal`, {
-          dataContext: this.dataContext || props.dataContext,
+          dataContext: this.state.dataContext || props.dataContext,
           behavior: props.current.behavior
         });
         // props.setState({[props.metadata.behavior.pageId]: true});
