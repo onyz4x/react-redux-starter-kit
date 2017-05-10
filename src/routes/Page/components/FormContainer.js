@@ -14,7 +14,7 @@ class FormContainer extends Component {
   constructor(props) {
     super();
 
-    if (props.behavior.mode == "edit") {
+    if (props.dataContext.mode == "edit") {
       this.state = {
         loading: true
       }
@@ -66,7 +66,7 @@ class FormContainer extends Component {
   render() {
 
     if (this.state.loading) return <div>laoding</div>
-    return <TestForm initialValues={this.state.initialValues}  {...this.props} dataContext={this.props.behavior}/>
+    return <TestForm initialValues={this.state.initialValues}  {...this.props}/>
   }
 }
 

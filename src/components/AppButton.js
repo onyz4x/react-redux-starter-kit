@@ -39,11 +39,18 @@ export class AppButton extends Component {
             s.pubs.forEach(p => {
               if (p.payloadMapping) {
                 let temp = {};
+
+                //todo: merge dataContext
                 p.payloadMapping.forEach(m => temp[m.key] = data[m.value])
-                PubSub.publish(p.event, temp)
+                PubSub.publish(p.event,
+                  temp
+                )
               }
               else
-                PubSub.publish(p.event, p.payload)
+                PubSub.publish(p.event,
+
+                  p.payload,
+                )
             })
 
           }
@@ -51,31 +58,81 @@ export class AppButton extends Component {
       })
     }
 
+    if (props.current.behavior && props.current.behavior['forEach']) {
+      props.current.behavior.forEach(behavior => {
+        if (behavior.type == "fetch") {
+          this.handleClick = () => {
 
-    let behavior = props.current.behavior;
-    if (behavior && behavior.type == "openModal") {
-      this.handleClick = () => {
-        PubSub.publish(`${props.current.behavior.pageId}.openModal`, {
-          dataContext: this.state.dataContext || props.dataContext,
-          behavior: props.current.behavior
-        });
-        // props.setState({[props.metadata.behavior.pageId]: true});
-        props.onClick(props.current)
-      }
-    } else if (behavior && behavior.type == "closeModal") {
-      this.handleClick = () => {
-        PubSub.publish(`${props.current.behavior.pageId}.closeModal`, "");
 
-        props.onClick(props.current)
-      }
+            let currentDataSource = props.metadata.dataSource.find(d => d.key == behavior.dataSource);
+
+            if (currentDataSource && currentDataSource.type == "api") {
+
+              let body = {};
+              if (props.dataContext && currentDataSource.params)
+                currentDataSource.params.forEach(p => {
+                  body[p.key] = props.dataContext[p.value]
+                })
+              request("http://localhost:3005" + currentDataSource.url,
+                {
+                  method: currentDataSource.method,
+                  body: JSON.stringify(body)
+                }
+                , (d) => {
+                  if (d.success && behavior.callbackPubs) {
+                    behavior.callbackPubs.forEach(c => {
+                      PubSub.publish(c.event, "")
+                    })
+                  }
+                  // PubSub.publish(`${behavior.target}.reload`, "")
+
+                })
+            }
+          }
+        }
+        else if (behavior.type == "event") {
+          this.handleClick = () => {
+
+            let payload = {};
+            if (behavior.payloadMapping) {
+              behavior.payloadMapping.forEach(m => {
+                payload[m.key] = this.state && this.state.dataContext[m.value] || props.dataContext[m.value]
+              })
+            }
+
+            PubSub.publish(behavior.event, Object.assign(payload, behavior.payload),
+            )
+          }
+        }
+
+      })
     }
-    else if (behavior && behavior.type == "save") {
-      this.handleClick = () => {
-        PubSub.publish(`${props.pageId}.save`, behavior);
 
-        props.onClick(props.current)
-      }
-    }
+
+    // let behavior = props.current.behavior;
+    // if (behavior && behavior.type == "openModal") {
+    //   this.handleClick = () => {
+    //     PubSub.publish(`${props.current.behavior.pageId}.openModal`, {
+    //       dataContext: this.state.dataContext || props.dataContext,
+    //       behavior: props.current.behavior
+    //     });
+    //     // props.setState({[props.metadata.behavior.pageId]: true});
+    //     props.onClick(props.current)
+    //   }
+    // } else if (behavior && behavior.type == "closeModal") {
+    //   this.handleClick = () => {
+    //     PubSub.publish(`${props.current.behavior.pageId}.closeModal`, "");
+    //
+    //     props.onClick(props.current)
+    //   }
+    // }
+    // else if (behavior && behavior.type == "save") {
+    //   this.handleClick = () => {
+    //     PubSub.publish(`${props.pageId}.save`, behavior);
+    //
+    //     props.onClick(props.current)
+    //   }
+    // }
   }
 
   componentDidMount() {

@@ -41,20 +41,20 @@ export class TestForm extends Component {
   constructor(props) {
     super();
 
-    PubSub.subscribe(`${props.pageId}.save`, (msg, behavior) => {
+    PubSub.subscribe(`${props.pageId}.save`, (msg, data) => {
       props.handleSubmit((values) => {
 
-        let dataSource = props.current.dataSource.find(d => d.key == behavior.dataSource);
+        let dataSource = props.current.dataSource.find(d => d.key == data.dataSource);
 
         request("http://localhost:3005" + dataSource.url,
           {
             method: dataSource.method,
             body: JSON.stringify(values)
           }
-          , (data) => {
-            if (data.success) {
+          , (d) => {
+            if (d.success) {
               PubSub.publish(`${props.pageId}.closeModal`, "");
-              PubSub.publish(`${behavior.target}.reload`, "")
+              PubSub.publish(`${data.target}.reload`, "")
               message.success("保存成功！");
             }
             else {
