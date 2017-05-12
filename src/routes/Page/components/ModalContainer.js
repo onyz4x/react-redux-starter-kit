@@ -15,7 +15,8 @@ class ModalContainer extends Component {
     super();
 
     this.state = {
-      isOpen: false
+      isOpen: false,
+      dataContext: props.dataContext
     }
 
     PubSub.subscribe(`${props.current.id}.closeModal`, () => {
@@ -25,8 +26,7 @@ class ModalContainer extends Component {
     PubSub.subscribe(`${props.current.id}.openModal`, (msg, data) => {
       this.setState({
         isOpen: true,
-        dataContext: data
-        // dataContext: data.dataContext
+        dataContext: Object.assign({}, this.state.dataContext, data)
       })
     })
 

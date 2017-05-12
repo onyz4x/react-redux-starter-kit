@@ -14,6 +14,11 @@ export class AppLinkButton extends Component {
   constructor(props) {
     super();
 
+    this.state = {
+      disabled: props.current.disabled,
+      dataContext: props.dataContext
+    }
+
     if (props.current.behavior && props.current.behavior['forEach']) {
       props.current.behavior.forEach(behavior => {
         if (behavior.type == "fetch") {
@@ -25,17 +30,17 @@ export class AppLinkButton extends Component {
             if (currentDataSource && currentDataSource.type == "api") {
 
               let body = {};
-              if (props.dataContext && currentDataSource.params)
+              if (this.state.dataContext && currentDataSource.params)
                 currentDataSource.params.forEach(p => {
-                  body[p.key] = props.dataContext[p.value]
+                  body[p.key] = this.state.dataContext[p.value]
                 })
               request("http://localhost:3005" + currentDataSource.url,
                 {
                   method: currentDataSource.method,
                   body: JSON.stringify(body)
                 }
-                , (data) => {
-                  if (data.success && behavior.callbackPubs) {
+                , (d) => {
+                  if (d.success && behavior.callbackPubs) {
                     behavior.callbackPubs.forEach(c => {
                       PubSub.publish(c.event, "")
                     })
@@ -52,13 +57,15 @@ export class AppLinkButton extends Component {
             let payload = {};
             if (behavior.payloadMapping) {
               behavior.payloadMapping.forEach(m => {
-                payload[m.key] = this.state && this.state.dataContext[m.value] || props.dataContext[m.value]
-
+                payload[m.key] = this.state.dataContext[m.value]
               })
+              PubSub.publish(behavior.event, Object.assign({}, payload, behavior.payload))
+            }
+            else {
+              PubSub.publish(behavior.event, Object.assign({}, this.state.dataContext, behavior.payload))
             }
 
-            PubSub.publish(behavior.event, Object.assign(payload, behavior.payload),
-            )
+
           }
         }
 
@@ -119,6 +126,10 @@ export class AppLinkButton extends Component {
 
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return !this.state.disabled == nextState.disabled;
+
+  }
 
   // handleClick() {
   //
@@ -144,6 +155,9 @@ export class AppLinkButton extends Component {
   }
 }
 
-AppLinkButton.propTypes = {}
+AppLinkButton
+  .propTypes = {}
 
-export default AppLinkButton
+export
+default
+AppLinkButton

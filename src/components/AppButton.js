@@ -16,18 +16,19 @@ export class AppButton extends Component {
 
 
     this.state = {
-      disabled: props.current.disabled
+      disabled: props.current.disabled,
+      dataContext: props.dataContext
     }
 
     PubSub.subscribe(`${props.id}.disabled`, (msg, data) => {
       this.setState({
-        disabled: data
+        disabled: data.disabled
       })
     })
 
     PubSub.subscribe(`${props.id}.dataContext`, (msg, data) => {
       this.setState({
-        dataContext: data
+        dataContext: Object.assign({}, this.state.dataContext, data)
       })
     })
 
@@ -40,16 +41,16 @@ export class AppButton extends Component {
               if (p.payloadMapping) {
                 let temp = {};
 
+
                 //todo: merge dataContext
                 p.payloadMapping.forEach(m => temp[m.key] = data[m.value])
                 PubSub.publish(p.event,
-                  temp
+                  Object.assign({}, this.state.dataContext, temp)
                 )
               }
               else
                 PubSub.publish(p.event,
-
-                  p.payload,
+                  Object.assign({}, this.state.dataContext, p.payload)
                 )
             })
 
@@ -69,9 +70,9 @@ export class AppButton extends Component {
             if (currentDataSource && currentDataSource.type == "api") {
 
               let body = {};
-              if (props.dataContext && currentDataSource.params)
+              if (this.state.dataContext && currentDataSource.params)
                 currentDataSource.params.forEach(p => {
-                  body[p.key] = props.dataContext[p.value]
+                  body[p.key] = this.state.dataContext[p.value]
                 })
               request("http://localhost:3005" + currentDataSource.url,
                 {
@@ -96,12 +97,15 @@ export class AppButton extends Component {
             let payload = {};
             if (behavior.payloadMapping) {
               behavior.payloadMapping.forEach(m => {
-                payload[m.key] = this.state && this.state.dataContext[m.value] || props.dataContext[m.value]
+                payload[m.key] = this.state.dataContext[m.value]
               })
+              PubSub.publish(behavior.event, Object.assign({}, payload, behavior.payload))
+            }
+            else {
+              PubSub.publish(behavior.event, Object.assign({}, this.state.dataContext, behavior.payload))
             }
 
-            PubSub.publish(behavior.event, Object.assign(payload, behavior.payload),
-            )
+
           }
         }
 
@@ -138,6 +142,9 @@ export class AppButton extends Component {
   componentDidMount() {
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return !this.state.disabled == nextState.disabled;
+  }
 
   // handleClick() {
   //

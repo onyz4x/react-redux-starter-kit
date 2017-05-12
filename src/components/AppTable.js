@@ -23,7 +23,8 @@ export class AppTable extends Component {
 
         props.current.rowItems.forEach((item, i) => {
           if (item.type == "button") {
-            rowItems.push(<AppLinkButton dataContext={record} key={i} id={item.id} pageId={props.pageId}
+            rowItems.push(<AppLinkButton dataContext={Object.assign({}, this.state.dataContext, record)} key={i}
+                                         id={item.id} pageId={props.pageId}
                                          metadata={props.metadata}
                                          current={item}
                                          onClick={() => {
@@ -47,7 +48,8 @@ export class AppTable extends Component {
       isLoading: false,
       pagination: {
         current: 1,
-      }
+      },
+      dataContext: props.dataContext
     }
 
 
@@ -97,13 +99,13 @@ export class AppTable extends Component {
                 //todo: merge dataContext
                 p.payloadMapping.forEach(m => temp[m.key] = data[m.value])
                 PubSub.publish(p.event,
-                  temp
+                  Object.assign({}, this.state.dataContext, temp)
                 )
               }
               else
                 PubSub.publish(p.event,
 
-                  p.payload,
+                  Object.assign({}, this.state.dataContext, p.payload)
                 )
             })
 

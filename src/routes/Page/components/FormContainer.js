@@ -16,17 +16,15 @@ class FormContainer extends Component {
 
     if (props.dataContext.mode == "edit") {
       this.state = {
-        loading: true
+        loading: true,
+        dataContext: props.dataContext
       }
-
-      //todo: get dataContext from props.dataContext
-
       let dataSource = props.current.dataSource.find(d => d.action == "initEditForm")
 
       let body = {};
       if (dataSource) {
         dataSource.params.forEach(p => {
-          body[p.key] = props.dataContext[p.value]
+          body[p.key] = this.state.dataContext[p.value]
         })
 
         request("http://localhost:3005" + dataSource.url + "?" + qs.stringify(body),
@@ -55,9 +53,13 @@ class FormContainer extends Component {
           loading: false
         }
       else {
+
+        let hiddenFields = {};
+        props.current.hiddenFields && props.current.hiddenFields.forEach(f => hiddenFields[f] = props.dataContext[f])
         this.state = {
           loading: false,
-          initialValues: {id: props.dataContext.id}
+          initialValues: hiddenFields,
+          dataContext: props.dataContext
         }
       }
     }

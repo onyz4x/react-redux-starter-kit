@@ -14,7 +14,8 @@ export class AppSearch extends Component {
   constructor(props) {
     super();
     this.state = {
-      text: ""
+      text: "",
+      dataContext: props.dataContext
 
     }
   }

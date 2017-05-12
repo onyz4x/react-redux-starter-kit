@@ -41,6 +41,10 @@ export class TestForm extends Component {
   constructor(props) {
     super();
 
+    this.state = {
+      dataContext: props.dataContext
+    }
+
     PubSub.subscribe(`${props.pageId}.save`, (msg, data) => {
       props.handleSubmit((values) => {
 
