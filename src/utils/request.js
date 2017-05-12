@@ -51,7 +51,7 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options, onSuccess, onError, ignoreToken = false) {
- // let tokenChicago = window.store.getState().global.get('tokenChicago');
+  // let tokenChicago = window.store.getState().global.get('tokenChicago');
   let opt = {
     headers: {
       'Content-Type': 'application/json',
@@ -67,6 +67,7 @@ export default function request(url, options, onSuccess, onError, ignoreToken = 
       return {data: data}
     })
     .catch((err) => {
+      debugger;
       if (onError) onError(err);
       return {err: err}
     });

@@ -58,10 +58,17 @@ export class TestForm extends Component {
               message.success("保存成功！");
             }
             else {
-              notification.error(err.message)
+              console.log(d.data)
+              notification.error({
+                message: 'Error',
+                description: d.data.message,
+              });
             }
           }, (err) => {
-            notification.error(err.message)
+            notification.error({
+              message: 'Error',
+              description: err.message,
+            });
 
           },
         )
