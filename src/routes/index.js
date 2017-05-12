@@ -16,7 +16,7 @@ import Test2Route from './Test2'
 
 export const createRoutes = (store) => ({
   path: '/',
-  component: IframeLayout,
+  component: CoreLayout,
   indexRoute: Home,
   childRoutes: [
     CounterRoute(store),

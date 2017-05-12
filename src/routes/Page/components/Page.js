@@ -64,8 +64,21 @@ export class Page extends Component {
 
   render() {
     if (!this.state.metadata.pages) return <div>loading</div>;
-    let defaultPage = this.state.metadata.pages.find(p => p.default);
 
+
+    let defaultPage = undefined
+
+    let s = this.props.params && this.props.params.s;
+
+    if (s == undefined) {
+      defaultPage = this.state.metadata.pages.find(p => p.default);
+    }
+    else {
+      defaultPage = this.state.metadata.pages.find(p => p.route == s);
+    }
+
+
+    if (!defaultPage) return <span>404</span>
     if (this.props.metadata == undefined && defaultPage.type == "form") {
       return <FormContainer id={defaultPage.id} pageId={defaultPage.id} current={defaultPage}
                             metadata={this.state.metadata}/>

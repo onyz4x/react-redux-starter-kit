@@ -14,7 +14,7 @@ class FormContainer extends Component {
   constructor(props) {
     super();
 
-    if (props.dataContext.mode == "edit") {
+    if (props.dataContext && props.dataContext.mode == "edit") {
       this.state = {
         loading: true,
         dataContext: props.dataContext
