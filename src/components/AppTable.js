@@ -75,17 +75,17 @@ export class AppTable extends Component {
       this.query = data;
     })
 
-    let params = {};
-    if (props.current.target != undefined) {
-      PubSub.subscribe(`${props.current.target}.${props.current.targetAction}`, (msg, data) => {
-        if (props.current.targetParams != undefined) {
-          props.current.targetParams.forEach(p => params[p.key] = data[p.value])
-        }
-        this.query = params;
-        this.loadData()
-
-      })
-    }
+    // let params = {};
+    // if (props.current.target != undefined) {
+    //   PubSub.subscribe(`${props.current.target}.${props.current.targetAction}`, (msg, data) => {
+    //     if (props.current.targetParams != undefined) {
+    //       props.current.targetParams.forEach(p => params[p.key] = data[p.value])
+    //     }
+    //     this.query = params;
+    //     this.loadData()
+    //
+    //   })
+    // }
 
     if (props.current.subscribes != undefined) {
 
@@ -95,8 +95,6 @@ export class AppTable extends Component {
             s.pubs.forEach(p => {
               if (p.payloadMapping) {
                 let temp = {};
-
-                //todo: merge dataContext
                 p.payloadMapping.forEach(m => temp[m.key] = data[m.value])
                 PubSub.publish(p.event,
                   Object.assign({}, this.state.dataContext, temp)
@@ -171,6 +169,11 @@ export class AppTable extends Component {
 
   componentWillUnmount() {
     PubSub.unsubscribe(this.props.id);
+    if (this.props.current.subscribes != undefined) {
+      this.props.current.subscribes.forEach(s => {
+        PubSub.unsubscribe(s.event);
+      })
+    }
   }
 
   pageChange(pagination) {

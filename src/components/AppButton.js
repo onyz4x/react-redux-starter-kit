@@ -139,6 +139,15 @@ export class AppButton extends Component {
     // }
   }
 
+  componentWillUnmount() {
+    PubSub.unsubscribe(`${this.props.id}`);
+    if (this.props.current.subscribes != undefined) {
+      this.props.current.subscribes.forEach(s => {
+        PubSub.unsubscribe(s.event);
+      })
+    }
+  }
+
   componentDidMount() {
   }
 

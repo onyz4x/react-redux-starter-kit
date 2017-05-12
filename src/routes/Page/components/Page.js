@@ -19,7 +19,8 @@ export class Page extends Component {
     super();
     if (props.metadata == undefined) {
       this.state = {
-        metadata: {}
+        metadata: {},
+        dataContext: props.dataContext
       }
     }
     else {
@@ -28,7 +29,8 @@ export class Page extends Component {
       page.default = true;
       metadata.pages = [page];
       this.state = {
-        metadata: metadata
+        metadata: metadata,
+        dataContext: props.dataContext
       }
     }
   }
@@ -78,25 +80,25 @@ export class Page extends Component {
                   switch (c.type) {
                     case "table":
                       return <AppTable key={k} id={c.id} pageId={defaultPage.id}
-                                       dataContext={this.props.dataContext}
+                                       dataContext={this.state.dataContext}
                                        metadata={defaultPage}
                                        current={c}></AppTable>;
                     case "button":
-                      return <AppButton key={k} dataContext={this.props.dataContext} id={c.id} pageId={defaultPage.id}
+                      return <AppButton key={k} dataContext={this.state.dataContext} id={c.id} pageId={defaultPage.id}
                                         setState={(state) => this.setState(state)} onClick={(m) => {
                       } } metadata={defaultPage}
                                         current={c}></AppButton>;
                     case "search":
-                      return <AppSearch key={k} dataContext={this.props.dataContext} id={c.id} pageId={defaultPage.id}
+                      return <AppSearch key={k} dataContext={this.state.dataContext} id={c.id} pageId={defaultPage.id}
                                         setState={(state) => this.setState(state)} onClick={(m) => {
                       } } metadata={defaultPage}
                                         current={c}></AppSearch>;
                     case "textField":
-                      return <Field key={k} dataContext={this.props.dataContext} metadata={defaultPage}
+                      return <Field key={k} dataContext={this.state.dataContext} metadata={defaultPage}
                                     id={c.id} pageId={defaultPage.id} name={c.name}
                                     current={c} label={c.label} component={TextField}/>;
                     case "selectField":
-                      return <Field key={k} dataContext={this.props.dataContext} metadata={defaultPage}
+                      return <Field key={k} dataContext={this.state.dataContext} metadata={defaultPage}
                                     id={c.id} pageId={defaultPage.id} name={c.name}
                                     initialValues={this.props.initialValues}
                                     current={c} label={c.label} component={SelectField}/>;

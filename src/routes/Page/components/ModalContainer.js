@@ -49,7 +49,8 @@ class ModalContainer extends Component {
   }
 
   componentWillUnmount() {
-    PubSub.unsubscribe(this.props.current.id);
+    PubSub.unsubscribe(`${this.props.current.id}.closeModal`);
+    PubSub.unsubscribe(`${this.props.current.id}.closeModal`);
   }
 
 

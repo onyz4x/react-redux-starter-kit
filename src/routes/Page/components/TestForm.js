@@ -30,8 +30,6 @@ const validate = (values, props) => {
     if (rule.minLength && ( value && value.length < rule.minLength.value)) {
       errors[rule.name] = rule.minLength.errorMsg;
     }
-
-
   })
   return errors
 }
