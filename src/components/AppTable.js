@@ -5,7 +5,7 @@
 import React, {Component} from 'react'
 import request from 'utils/request'
 import PubSub from 'pubsub-js'
-
+var moment = require('moment');
 import AppLinkButton from './AppLinkButton'
 import qs from 'qs';
 import {Table, Button} from 'antd'
@@ -39,8 +39,22 @@ export class AppTable extends Component {
       }
     }
 
+    let me = this;
     this.state = {
-      columns: props.current.columns.concat([{
+      columns: props.current.columns.map(c => {
+        if (c.render) {
+          return {
+            title: c.title, render: (text, record) => {
+
+
+              return eval(c.render)
+            }
+          }
+        }
+        else
+          return c;
+
+      }).concat([{
         title: '操作',
         render: (p, record, i) => <div key={i}>{getRowItem(record)}</div>
       }]),
@@ -74,18 +88,6 @@ export class AppTable extends Component {
     PubSub.subscribe(`${props.id}.setQuery`, (msg, data) => {
       this.query = data;
     })
-
-    // let params = {};
-    // if (props.current.target != undefined) {
-    //   PubSub.subscribe(`${props.current.target}.${props.current.targetAction}`, (msg, data) => {
-    //     if (props.current.targetParams != undefined) {
-    //       props.current.targetParams.forEach(p => params[p.key] = data[p.value])
-    //     }
-    //     this.query = params;
-    //     this.loadData()
-    //
-    //   })
-    // }
 
     if (props.current.subscribes != undefined) {
 
@@ -184,17 +186,7 @@ export class AppTable extends Component {
     const current = this.props.current;
     if (current.enableRowClick)
       this.setState({selectedRow: record[current.rowKey]}, () => {
-
         PubSub.publish(`${current.id}.changed`, record)
-
-        // if (current.target != undefined) {
-        //   let params = {};
-        //   if (current.targetParams != undefined) {
-        //     current.targetParams.forEach(p => params[p.key] = record[p.value])
-        //   }
-        //   PubSub.publish(`${current.target}.${current.targetAction}`, params)
-        // }
-
       })
   }
 

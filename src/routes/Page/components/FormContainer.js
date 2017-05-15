@@ -14,10 +14,18 @@ class FormContainer extends Component {
   constructor(props) {
     super();
 
-    if (props.dataContext && props.dataContext.mode == "edit") {
+    let locationState = undefined;
+
+    if (props.location) {
+
+      locationState = props.location.state;
+    }
+
+
+    if (props.dataContext && props.dataContext.mode == "edit" ||locationState&&locationState.mode=="edit") {
       this.state = {
         loading: true,
-        dataContext: props.dataContext
+        dataContext:Object.assign({},props.dataContext,locationState)
       }
       let dataSource = props.current.dataSource.find(d => d.action == "initEditForm")
 
@@ -50,7 +58,8 @@ class FormContainer extends Component {
     else {
       if (props.dataContext == undefined)
         this.state = {
-          loading: false
+          loading: false,
+          dataContext:Object.assign({},props.dataContext,locationState)
         }
       else {
 
@@ -59,7 +68,7 @@ class FormContainer extends Component {
         this.state = {
           loading: false,
           initialValues: hiddenFields,
-          dataContext: props.dataContext
+          dataContext:Object.assign({},props.dataContext,locationState)
         }
       }
     }

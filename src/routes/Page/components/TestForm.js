@@ -48,6 +48,8 @@ export class TestForm extends Component {
 
         let dataSource = props.current.dataSource.find(d => d.key == data.dataSource);
 
+        delete values['commitStamp'];
+        delete values['_hash']
         request("http://localhost:3005" + dataSource.url,
           {
             method: dataSource.method,
@@ -60,7 +62,6 @@ export class TestForm extends Component {
               message.success("保存成功！");
             }
             else {
-              console.log(d.data)
               notification.error({
                 message: 'Error',
                 description: d.data.message,

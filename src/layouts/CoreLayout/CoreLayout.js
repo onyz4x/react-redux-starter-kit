@@ -12,7 +12,7 @@ import classes from './CoreLayout.scss'
 
 export const CoreLayout = ({children}) => (
   <Layout style={{minHeight: 650}}>
-    <Header theme="light" style={{ backgroundImage: `url(${test})`, backgroundSize:"cover",borderBottom: "1px lightgray solid",boxShadow:"10px 10px 5px #888888"}}>
+    <Header style={{ backgroundImage: `url(${test})`, backgroundSize:"cover",borderBottom: "1px lightgray solid",boxShadow:"10px 10px 5px #888888"}}>
     </Header>
     <Layout>
       <Sider width={200} style={{background: '#fff'}}>

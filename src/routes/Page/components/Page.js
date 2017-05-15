@@ -17,20 +17,28 @@ export class Page extends Component {
 
   constructor(props) {
     super();
+    let locationState = undefined;
+
+    if (props.location) {
+
+      locationState = props.location.state;
+    }
+
     if (props.metadata == undefined) {
       this.state = {
         metadata: {},
-        dataContext: props.dataContext
+        dataContext: Object.assign({}, props.dataContext, locationState)
       }
     }
     else {
       let metadata = update(props.metadata, {})
       let page = metadata.pages.find(p => p.id == props.id);
-      page.default = true;
+
+      // page.default = true;
       metadata.pages = [page];
       this.state = {
         metadata: metadata,
-        dataContext: props.dataContext
+        dataContext: Object.assign({}, props.dataContext, locationState)
       }
     }
   }
@@ -51,18 +59,24 @@ export class Page extends Component {
     }
   }
 
+  componentWillMount() {
+  }
+
+  componentWillReceiveProps() {
+  }
 
   renderModalPage(id) {
-    let modals = this.state.metadata.pages.filter(p => p.display == "modal" && !!p.default == false);
+    let modals = this.state.metadata.pages.filter(p => p.display == "modal" && p.target == id);
     let results = []
     modals.forEach(m => {
-      results.push(<ModalContainer parentId={id} key={m.id} current={m}
+      results.push(<ModalContainer location={this.props.location} parentId={id} key={m.id} current={m}
                                    metadata={this.state.metadata}></ModalContainer>)
     })
     return results;
   }
 
   render() {
+    //console.log(this.props)
     if (!this.state.metadata.pages) return <div>loading</div>;
 
 
@@ -71,16 +85,18 @@ export class Page extends Component {
     let s = this.props.params && this.props.params.s;
 
     if (s == undefined) {
-      defaultPage = this.state.metadata.pages.find(p => p.default);
+      defaultPage = this.state.metadata.pages[0];
     }
     else {
       defaultPage = this.state.metadata.pages.find(p => p.route == s);
+
     }
 
 
     if (!defaultPage) return <span>404</span>
     if (this.props.metadata == undefined && defaultPage.type == "form") {
-      return <FormContainer id={defaultPage.id} pageId={defaultPage.id} current={defaultPage}
+      return <FormContainer location={this.props.location} id={defaultPage.id} pageId={defaultPage.id}
+                            current={defaultPage}
                             metadata={this.state.metadata}/>
     }
     return (

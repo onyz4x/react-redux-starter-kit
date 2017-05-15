@@ -67,7 +67,6 @@ export default function request(url, options, onSuccess, onError, ignoreToken = 
       return {data: data}
     })
     .catch((err) => {
-      debugger;
       if (onError) onError(err);
       return {err: err}
     });

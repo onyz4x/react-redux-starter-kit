@@ -14,6 +14,7 @@ class ModalContainer extends Component {
   constructor(props) {
     super();
 
+
     this.state = {
       isOpen: false,
       dataContext: props.dataContext
@@ -32,10 +33,19 @@ class ModalContainer extends Component {
 
   }
 
+  componentWillMount()
+  {
+
+  }
+
   closeModal() {
     this.setState({
       isOpen: false
     })
+  }
+  componentWillReceiveProps(nextprops)
+  {
+
   }
 
   renderModalContent(m) {
@@ -57,7 +67,7 @@ class ModalContainer extends Component {
   render() {
     const {current} = this.props;
 
-    if (!this.state.isOpen) return <element></element>;
+    if (!this.state.isOpen) return  ( null);
     return <Modal onCancel={() => this.closeModal()} width={current.width} title={this.state.dataContext.title}
                   visible={this.state.isOpen} footer="">
       {this.renderModalContent(current)}
