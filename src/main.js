@@ -1,16 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/lib/createBrowserHistory'
-import { useRouterHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
+import {useRouterHistory} from 'react-router'
+import {syncHistoryWithStore} from 'react-router-redux'
 import createStore from './store/createStore'
 import AppContainer from './containers/AppContainer'
 
 
-import { I18nextProvider } from 'react-i18next';
- // as we build ourself via webpack
+import {I18nextProvider} from 'react-i18next';
+// as we build ourself via webpack
 import i18n from './i18n';
+import moment from 'moment'
 
+template.defaults.imports.dateFormat = function (date, format) {
+  if (date != undefined)
+    return moment(date).format(format)
+};
+
+template.defaults.imports.log = console.log;
 
 // ========================================================
 // Browser History Setup
@@ -76,7 +83,7 @@ if (__DEV__) {
     const renderError = (error) => {
       const RedBox = require('redbox-react').default
 
-      ReactDOM.render(<RedBox error={error} />, MOUNT_NODE)
+      ReactDOM.render(<RedBox error={error}/>, MOUNT_NODE)
     }
 
     // Wrap render in try/catch

@@ -45,9 +45,8 @@ export class AppTable extends Component {
         if (c.render) {
           return {
             title: c.title, render: (text, record) => {
-
-
-              return eval(c.render)
+              return <element
+                dangerouslySetInnerHTML={(() => ({__html: template.render(c.render, {record, moment})}))()}></element>
             }
           }
         }

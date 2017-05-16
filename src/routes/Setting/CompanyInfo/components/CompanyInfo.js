@@ -125,8 +125,14 @@ export class CompanyInfo extends Component {
   }
 
   componentDidMount() {
+   let dd=  template.compile("{{me.props.location.pathname}}");
+debugger;
 
-    this.testDiv.innerHTML = template.render("<H2>sdcd</H2>")
+    this.testDiv.innerHTML = template.render("<H2 style='color:red'><Card>wewe</Card>sdcd</H2>")
+  }
+
+  generate() {
+    return Babel.transform("<div>nnn</div>", {presets: ["es2015", "react", "stage-0"]})
   }
 
   render() {
@@ -144,8 +150,8 @@ export class CompanyInfo extends Component {
         <Card>
           <Table scroll={{x: 800}} dataSource={this.dataSource} size="middle" columns={this.columns2}/>
         </Card>
-        <element ref={(node) => this.testDiv = node}></element>
-
+        <element ref={(node) => this.testDiv = node}>
+        </element>
 
       </div>
     )
