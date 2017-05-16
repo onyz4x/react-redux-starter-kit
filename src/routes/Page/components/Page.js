@@ -3,6 +3,8 @@ import {Row, Col, Button, Modal} from 'antd'
 import AppTable from 'components/AppTable'
 import AppButton from 'components/AppButton'
 import AppSearch from 'components/AppSearch'
+import AppHtmlContent from 'components/AppHtmlContent'
+
 import TextField from 'components/Form/TextField'
 import SelectField from 'components/Form/SelectField'
 import DatePickerField from 'components/Form/DatePickerField'
@@ -128,6 +130,11 @@ export class Page extends Component {
                                         setState={(state) => this.setState(state)} onClick={(m) => {
                       } } metadata={defaultPage}
                                         current={c}></AppSearch>;
+                    case "htmlContent":
+                      return <AppHtmlContent key={k} dataContext={this.state.dataContext} id={c.id} pageId={defaultPage.id}
+                                        setState={(state) => this.setState(state)} onClick={(m) => {
+                      } } metadata={defaultPage}
+                                        current={c}></AppHtmlContent>;
                     case "textField":
                       return <Field key={k} dataContext={this.state.dataContext} metadata={defaultPage}
                                     id={c.id} pageId={defaultPage.id} name={c.name}

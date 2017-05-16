@@ -8,8 +8,11 @@ import PubSub from 'pubsub-js'
 var moment = require('moment');
 import AppLinkButton from './AppLinkButton'
 import qs from 'qs';
-import {Table, Button} from 'antd'
-
+import {Table, Button, Card} from 'antd'
+var ReactDOMServer = require('react-dom/server');
+var HtmlToReactParser = require('html-to-react').Parser;
+var ProcessNodeDefinitions = require('html-to-react').ProcessNodeDefinitions;
+import update from 'react-addons-update';
 export class AppTable extends Component {
 
 
@@ -45,8 +48,40 @@ export class AppTable extends Component {
         if (c.render) {
           return {
             title: c.title, render: (text, record) => {
-              return <element
-                dangerouslySetInnerHTML={(() => ({__html: template.render(c.render, {record, moment})}))()}></element>
+              let dd = template.render("<elemnet>" + c.render + "</elemnet>", {record, moment});
+
+
+              var isValidNode = function () {
+                return true;
+              };
+
+// Order matters. Instructions are processed in the order they're defined
+              var processNodeDefinitions = new ProcessNodeDefinitions(React);
+              var processingInstructions = [
+                {
+                  // Custom <h1> processing
+                  shouldProcessNode: function (node) {
+                    return node.name === 'card';
+                  },
+                  processNode: function (node, children) {
+                    return <Card></Card>
+                  }
+                }, {
+                  // Anything else
+                  shouldProcessNode: function (node) {
+                    return true;
+                  },
+                  processNode: processNodeDefinitions.processDefaultNode
+                }];
+              // debugger;
+              var htmlToReactParser = new HtmlToReactParser();
+              var reactElement = htmlToReactParser.parseWithInstructions(dd, isValidNode,
+                processingInstructions);
+              var reactHtml = ReactDOMServer.renderToStaticMarkup(reactElement);
+              return reactElement
+              // debugger;
+              // return <element
+              //   dangerouslySetInnerHTML={(() => ({__html: dd}))()}></element>
             }
           }
         }
@@ -148,7 +183,7 @@ export class AppTable extends Component {
                   total: data.total
                 }
               })
-
+              PubSub.publish(`${this.props.id}.dataSourceChanged`, data)
 
               if (this.props.current.enableRowClick && !data.data.find(d => d[this.props.current.rowKey] == this.state.selectedRow)) {
                 console.log("unfound info")

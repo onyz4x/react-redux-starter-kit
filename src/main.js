@@ -18,6 +18,8 @@ template.defaults.imports.dateFormat = function (date, format) {
 };
 
 template.defaults.imports.log = console.log;
+template.defaults.imports.parseInt = parseInt;
+
 
 // ========================================================
 // Browser History Setup
