@@ -125,6 +125,8 @@ export class CompanyInfo extends Component {
   }
 
   componentDidMount() {
+
+    this.testDiv.innerHTML = template.render("<H2>sdcd</H2>")
   }
 
   render() {
@@ -142,6 +144,8 @@ export class CompanyInfo extends Component {
         <Card>
           <Table scroll={{x: 800}} dataSource={this.dataSource} size="middle" columns={this.columns2}/>
         </Card>
+        <element ref={(node) => this.testDiv = node}></element>
+
 
       </div>
     )

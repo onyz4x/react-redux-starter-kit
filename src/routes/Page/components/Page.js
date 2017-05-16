@@ -5,6 +5,7 @@ import AppButton from 'components/AppButton'
 import AppSearch from 'components/AppSearch'
 import TextField from 'components/Form/TextField'
 import SelectField from 'components/Form/SelectField'
+import DatePickerField from 'components/Form/DatePickerField'
 import request from 'utils/request'
 import {reduxForm, Field} from 'redux-form';
 import FormContainer from './FormContainer'
@@ -57,6 +58,11 @@ export class Page extends Component {
         {}, this.updateMetadata.bind(this)
       )
     }
+  }
+
+  shouldComponentUpdate(nextPros, nextState) {
+
+    return true;
   }
 
   componentWillMount() {
@@ -131,6 +137,11 @@ export class Page extends Component {
                                     id={c.id} pageId={defaultPage.id} name={c.name}
                                     initialValues={this.props.initialValues}
                                     current={c} label={c.label} component={SelectField}/>;
+                    case "datePickerField":
+                      return <Field key={k} dataContext={this.state.dataContext} metadata={defaultPage}
+                                    id={c.id} pageId={defaultPage.id} name={c.name}
+                                    initialValues={this.props.initialValues}
+                                    current={c} label={c.label} component={DatePickerField}/>;
                     default:
                       return <span key={k}></span>;
                   }

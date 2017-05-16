@@ -79,6 +79,7 @@ export const FormDemo = (props) => {
 
         <button type="button" onClick={loadCities}>Load CIties</button>
       </div>
+
     </form>
   )
 }

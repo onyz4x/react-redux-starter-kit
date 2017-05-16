@@ -13,7 +13,6 @@ export class SelectField extends Component {
 
   constructor(props) {
     super();
-
     this.state = {
       dataSource: []
     }
