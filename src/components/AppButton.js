@@ -140,7 +140,8 @@ export class AppButton extends Component {
   }
 
   componentWillUnmount() {
-    PubSub.unsubscribe(`${this.props.id}`);
+    PubSub.unsubscribe(`${this.props.id}.disabled`);
+    PubSub.unsubscribe(`${this.props.id}.dataContext`);
     if (this.props.current.subscribes != undefined) {
       this.props.current.subscribes.forEach(s => {
         PubSub.unsubscribe(s.event);

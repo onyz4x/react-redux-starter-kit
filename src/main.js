@@ -10,15 +10,7 @@ import AppContainer from './containers/AppContainer'
 import {I18nextProvider} from 'react-i18next';
 // as we build ourself via webpack
 import i18n from './i18n';
-import moment from 'moment'
 
-template.defaults.imports.dateFormat = function (date, format) {
-  if (date != undefined)
-    return moment(date).format(format)
-};
-
-template.defaults.imports.log = console.log;
-template.defaults.imports.parseInt = parseInt;
 
 
 // ========================================================

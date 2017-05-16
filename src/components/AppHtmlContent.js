@@ -13,6 +13,7 @@ export class AppHtmlContent extends Component {
 
   constructor(props) {
     super();
+    console.log('constructor')
     this.state = {
       dataContext: props.dataContext
     }
@@ -30,6 +31,7 @@ export class AppHtmlContent extends Component {
         PubSub.subscribe(s.event, (msg, data) => {
           if (s.pubs) {
             s.pubs.forEach(p => {
+
               if (p.payloadMapping) {
                 let temp = {};
 
@@ -54,12 +56,21 @@ export class AppHtmlContent extends Component {
 
   componentDidMount() {
 
+    console.log('componentDidMount')
   }
 
+  componentWillUnmount() {
+    PubSub.unsubscribe(`${this.props.id}.dataContext`);
+    if (this.props.current.subscribes != undefined) {
+      this.props.current.subscribes.forEach(s => {
+        PubSub.unsubscribe(s.event);
+      })
+    }
+  }
   render() {
 
     console.log(this.state.dataContext)
-    let html = template.render("<elemnet>" + this.props.current.html + "</elemnet>", {
+    let html = ejs.render("<elemnet>" + this.props.current.html + "</elemnet>", {
         dataContext: this.state.dataContext
       })
     ;

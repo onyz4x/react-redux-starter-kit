@@ -48,7 +48,7 @@ export class AppTable extends Component {
         if (c.render) {
           return {
             title: c.title, render: (text, record) => {
-              let dd = template.render("<elemnet>" + c.render + "</elemnet>", {record, moment});
+              let dd = ejs.render("<elemnet>" + c.render + "</elemnet>", {record, moment});
 
 
               var isValidNode = function () {
@@ -137,6 +137,7 @@ export class AppTable extends Component {
                 )
               }
               else
+
                 PubSub.publish(p.event,
 
                   Object.assign({}, this.state.dataContext, p.payload)
@@ -204,7 +205,10 @@ export class AppTable extends Component {
   }
 
   componentWillUnmount() {
-    PubSub.unsubscribe(this.props.id);
+    PubSub.unsubscribe(`${this.props.id}.setQuery`);
+    PubSub.unsubscribe(`${this.props.id}.clear`);
+    PubSub.unsubscribe(`${this.props.id}.clearSelect`);
+    PubSub.unsubscribe(`${this.props.id}.reload`);
     if (this.props.current.subscribes != undefined) {
       this.props.current.subscribes.forEach(s => {
         PubSub.unsubscribe(s.event);
