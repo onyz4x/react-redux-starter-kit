@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Table, Button, Card, Dropdown, Menu, Icon, Breadcrumb} from 'antd'
 import classes from './CompanyInfo.scss'
-
+// var mustache= require('mustache')
 export class CompanyInfo extends Component {
 
   constructor(props) {
@@ -125,14 +125,17 @@ export class CompanyInfo extends Component {
   }
 
   componentDidMount() {
-   let dd=  template.compile("{{me.props.location.pathname}}");
-debugger;
+    //debugger;
 
-    this.testDiv.innerHTML = template.render("<H2 style='color:red'><Card>wewe</Card>sdcd</H2>")
+
+   // var dd = mustache;
+    // var template = mustache.render("<div></div>");
+    // var result = template({});
+    //  this.testDiv.innerHTML = template.render("<H2 style='color:red'><Card>wewe</Card>sdcd</H2>")
   }
 
   generate() {
-    return Babel.transform("<div>nnn</div>", {presets: ["es2015", "react", "stage-0"]})
+    // return Babel.transform("<div>nnn</div>", {presets: ["es2015", "react", "stage-0"]})
   }
 
   render() {

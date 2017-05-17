@@ -22,10 +22,10 @@ class FormContainer extends Component {
     }
 
 
-    if (props.dataContext && props.dataContext.mode == "edit" ||locationState&&locationState.mode=="edit") {
+    if (props.dataContext && props.dataContext.mode == "edit" || locationState && locationState.mode == "edit") {
       this.state = {
         loading: true,
-        dataContext:Object.assign({},props.dataContext,locationState)
+        dataContext: Object.assign({}, props.dataContext, locationState)
       }
       let dataSource = props.current.dataSource.find(d => d.action == "initEditForm")
 
@@ -59,7 +59,7 @@ class FormContainer extends Component {
       if (props.dataContext == undefined)
         this.state = {
           loading: false,
-          dataContext:Object.assign({},props.dataContext,locationState)
+          dataContext: Object.assign({}, props.dataContext, locationState)
         }
       else {
 
@@ -68,7 +68,7 @@ class FormContainer extends Component {
         this.state = {
           loading: false,
           initialValues: hiddenFields,
-          dataContext:Object.assign({},props.dataContext,locationState)
+          dataContext: Object.assign({}, props.dataContext, locationState)
         }
       }
     }
@@ -84,9 +84,13 @@ class FormContainer extends Component {
 function
 
 mapStateToProps(state, props) {
+  let asyncBlurFields = [];
+  if (props.current.asyncRules)
+    props.current.asyncRules.forEach(a => asyncBlurFields.push(a.name))
 
   return {
     form: props.id,
+    asyncBlurFields
     //currentForm: state.form[props.id]
   }
 }

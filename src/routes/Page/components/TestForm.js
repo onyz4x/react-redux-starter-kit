@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react'
 import request from 'utils/request'
-
+import qs from 'qs';
 import {reduxForm, Field} from 'redux-form';
 import Page from './Page'
 import {message, notification} from 'antd'
@@ -32,6 +32,50 @@ const validate = (values, props) => {
     }
   })
   return errors
+}
+
+
+const asyncValidate = (values, dispatch, props, blurredField) => {
+
+  let a = props.current.asyncRules;
+
+  for (var i = 0; i < a.length; i++) {
+    if (blurredField == a[i].name) {
+
+      let dataSource = props.current.dataSource.find(d => d.key == a[i].dataSource)
+
+      let body = {};
+      if (dataSource) {
+
+
+        dataSource.params.forEach(p => {
+          body[p.key] = values[p.value]
+        })
+
+
+        return new Promise((resolve, reject) => {
+          request("http://localhost:3005" + dataSource.url + "?" + qs.stringify(body), {
+            method: dataSource.method
+          }, (data) => {
+            if (data.success && data.data && data.data.length > 0) reject()
+            else
+              resolve()
+          })
+        }).then(null, (data) => {
+            throw {[a[i].name]: a[i].errorMsg}
+          }
+        )
+
+
+      }
+
+    }
+    // more statements
+  }
+
+
+  return new Promise((resolve, reject) => resolve());
+
 }
 
 export class TestForm extends Component {
@@ -100,7 +144,8 @@ export class TestForm extends Component {
 TestForm.propTypes = {}
 
 export default reduxForm({
-  validate
+  validate,
+  asyncValidate
 })(TestForm)
 
 

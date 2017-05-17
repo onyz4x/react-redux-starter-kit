@@ -13,13 +13,12 @@ var ReactDOMServer = require('react-dom/server');
 var HtmlToReactParser = require('html-to-react').Parser;
 var ProcessNodeDefinitions = require('html-to-react').ProcessNodeDefinitions;
 import update from 'react-addons-update';
+
 export class AppTable extends Component {
 
 
   constructor(props) {
     super();
-
-
     let getRowItem = (record) => {
       let rowItems = []
       if (props.current.rowItems != undefined) {
@@ -31,13 +30,10 @@ export class AppTable extends Component {
                                          metadata={props.metadata}
                                          current={item}
                                          onClick={() => {
-
-
                                          }}>{item.title}</AppLinkButton>)
           }
 
         })
-
         return rowItems;
       }
     }
@@ -49,17 +45,12 @@ export class AppTable extends Component {
           return {
             title: c.title, render: (text, record) => {
               let dd = ejs.render("<elemnet>" + c.render + "</elemnet>", {record, moment});
-
-
               var isValidNode = function () {
                 return true;
               };
-
-// Order matters. Instructions are processed in the order they're defined
               var processNodeDefinitions = new ProcessNodeDefinitions(React);
               var processingInstructions = [
                 {
-                  // Custom <h1> processing
                   shouldProcessNode: function (node) {
                     return node.name === 'card';
                   },
@@ -67,19 +58,16 @@ export class AppTable extends Component {
                     return <Card></Card>
                   }
                 }, {
-                  // Anything else
                   shouldProcessNode: function (node) {
                     return true;
                   },
                   processNode: processNodeDefinitions.processDefaultNode
                 }];
-              // debugger;
               var htmlToReactParser = new HtmlToReactParser();
               var reactElement = htmlToReactParser.parseWithInstructions(dd, isValidNode,
                 processingInstructions);
-              var reactHtml = ReactDOMServer.renderToStaticMarkup(reactElement);
+              // var reactHtml = ReactDOMServer.renderToStaticMarkup(reactElement);
               return reactElement
-              // debugger;
               // return <element
               //   dangerouslySetInnerHTML={(() => ({__html: dd}))()}></element>
             }
