@@ -38,41 +38,43 @@ const validate = (values, props) => {
 const asyncValidate = (values, dispatch, props, blurredField) => {
 
   let a = props.current.asyncRules;
+  if (a) {
 
-  for (var i = 0; i < a.length; i++) {
-    if (blurredField == a[i].name) {
+    for (var i = 0; i < a.length; i++) {
+      if (blurredField == a[i].name) {
 
-      let dataSource = props.current.dataSource.find(d => d.key == a[i].dataSource)
+        let dataSource = props.current.dataSource.find(d => d.key == a[i].dataSource)
 
-      let body = {};
-      if (dataSource) {
-
-
-        dataSource.params.forEach(p => {
-          body[p.key] = values[p.value]
-        })
+        let body = {};
+        if (dataSource) {
 
 
-        return new Promise((resolve, reject) => {
-          request("http://localhost:3005" + dataSource.url + "?" + qs.stringify(body), {
-            method: dataSource.method
-          }, (data) => {
-            if (data.success && data.data && data.data.length > 0) reject()
-            else
-              resolve()
+          dataSource.params.forEach(p => {
+            body[p.key] = values[p.value]
           })
-        }).then(null, (data) => {
-            throw {[a[i].name]: a[i].errorMsg}
-          }
-        )
 
+
+          return new Promise((resolve, reject) => {
+            request("http://localhost:3005" + dataSource.url + "?" + qs.stringify(body), {
+              method: dataSource.method
+            }, (data) => {
+              if (data.success && data.data && data.data.length > 0) reject()
+              else
+                resolve()
+            })
+          }).then(null, (data) => {
+              throw {[a[i].name]: a[i].errorMsg}
+            }
+          )
+
+
+        }
 
       }
-
+      // more statements
     }
-    // more statements
-  }
 
+  }
 
   return new Promise((resolve, reject) => resolve());
 
