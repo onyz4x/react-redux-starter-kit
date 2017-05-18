@@ -4,7 +4,7 @@ import AppTable from 'components/AppTable'
 import AppButton from 'components/AppButton'
 import AppSearch from 'components/AppSearch'
 import AppHtmlContent from 'components/AppHtmlContent'
-
+import AppTree from 'components/AppTree'
 import TextField from 'components/Form/TextField'
 import SelectField from 'components/Form/SelectField'
 import DatePickerField from 'components/Form/DatePickerField'
@@ -50,7 +50,8 @@ export class Page extends Component {
 
     if (data.success)
       this.setState({
-        metadata: data.data
+        metadata: data.data,
+        dataContext:{}
       })
   }
 
@@ -70,7 +71,13 @@ export class Page extends Component {
   componentWillMount() {
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
+
+    if(this.props.params &&nextProps.params&& this.props.params.id!=nextProps.params.id)
+    {
+      request(`http://localhost:3005/metadata/${nextProps.params.id}`,
+        {}, this.updateMetadata.bind(this))
+    }
   }
 
   renderModalPage(id) {
@@ -125,6 +132,11 @@ export class Page extends Component {
                                         setState={(state) => this.setState(state)} onClick={(m) => {
                       } } metadata={defaultPage}
                                         current={c}></AppButton>;
+                    case "tree":
+                      return <AppTree key={k} dataContext={this.state.dataContext} id={c.id} pageId={defaultPage.id}
+                                        setState={(state) => this.setState(state)} onClick={(m) => {
+                      } } metadata={defaultPage}
+                                        current={c}></AppTree>;
                     case "search":
                       return <AppSearch key={k} dataContext={this.state.dataContext} id={c.id} pageId={defaultPage.id}
                                         setState={(state) => this.setState(state)} onClick={(m) => {

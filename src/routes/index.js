@@ -17,7 +17,6 @@ import Test2Route from './Test2'
 export const createRoutes = (store) => ({
   path: '/',
   component: CoreLayout,
-  indexRoute: Home,
   childRoutes: [
     CounterRoute(store),
     FormDemoRoute(store),

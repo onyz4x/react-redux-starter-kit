@@ -7,6 +7,7 @@ import test from './test.png'
 
 
 import classes from './CoreLayout.scss'
+import PubSub from 'pubsub-js'
 // import 'antd/dist/antd.css'
 // import '../../styles/core.scss'
 
@@ -29,7 +30,9 @@ export const CoreLayout = ({children}) => (
               <Link to='/page/dictionary'>
                 字典管理
               </Link></Menu.Item>
-            <Menu.Item key="21">xxxx</Menu.Item>
+            <Menu.Item key="21"> <Link to='/page/materialCategory'>
+              物料类别管理
+            </Link></Menu.Item>
             <Menu.Item key="31">
               <Link to='/test1'>
                 xxxxx
